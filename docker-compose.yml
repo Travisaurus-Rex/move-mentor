@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: move_mentor_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: move_mentor
+      POSTGRES_PASSWORD: move_mentor
+      POSTGRES_DB: move_mentor
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

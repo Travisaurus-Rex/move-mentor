@@ -13,3 +13,83 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+// --------------------
+// Enums
+// --------------------
+
+enum ExerciseCategory {
+  STRENGTH
+  CARDIO
+  BODYWEIGHT
+  MOBILITY
+}
+
+// --------------------
+// Models
+// --------------------
+
+model User {
+  id            String    @id @default(cuid())
+  email         String?   @unique
+  name          String?
+  image         String?
+
+  workouts      Workout[]
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+
+model Exercise {
+  id       String           @id @default(cuid())
+  name     String
+  category ExerciseCategory
+
+  workoutExercises WorkoutExercise[]
+
+  createdAt DateTime @default(now())
+}
+
+model Workout {
+  id     String   @id @default(cuid())
+  userId String
+  date   DateTime
+  notes  String?
+
+  user      User              @relation(fields: [userId], references: [id])
+  exercises WorkoutExercise[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model WorkoutExercise {
+  id         String @id @default(cuid())
+  workoutId  String
+  exerciseId String
+  order      Int
+
+  workout  Workout  @relation(fields: [workoutId], references: [id])
+  exercise Exercise @relation(fields: [exerciseId], references: [id])
+  sets     Set[]
+
+  createdAt DateTime @default(now())
+}
+
+model Set {
+  id                String @id @default(cuid())
+  workoutExerciseId String
+
+  reps     Int?
+  weight   Float?
+  duration Int?
+  distance Float?
+  rpe      Int?
+  notes    String?
+
+  workoutExercise WorkoutExercise @relation(fields: [workoutExerciseId], references: [id])
+
+  createdAt DateTime @default(now())
+}
