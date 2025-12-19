@@ -1,9 +1,10 @@
 import { getServerSession } from "next-auth"
 import { prisma } from "../prisma"
 import { User } from "@/generated/prisma/client"
+import { authOptions } from "@/app/api/auth/authOptions";
 
 export async function getUser(): Promise<User> {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     
     if (!session?.user?.email) {
         throw new Error('Not authenticated');
