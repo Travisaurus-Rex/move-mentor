@@ -1,18 +1,16 @@
 'use client'
 
 import { useState } from 'react'
+import { createWorkout } from '../actions'
 
 export default function NewWorkoutPage() {
   const [date, setDate] = useState('')
   const [notes, setNotes] = useState('')
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
-    console.log({
-      date,
-      notes,
-    })
+    await createWorkout({ date, notes});
   }
 
   return (
