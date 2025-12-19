@@ -1,7 +1,8 @@
 import { prisma } from '@/lib/prisma';
 import { getUser } from '../auth/user';
+import { Workout } from '@/generated/prisma/client';
 
-export async function getUserWorkouts() {
+export async function getUserWorkouts(): Promise<Workout[]> {
   const user = await getUser();
 
   return prisma.workout.findMany({
