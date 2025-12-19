@@ -8,7 +8,7 @@ export async function createWorkout(params: { date: string, notes: string}): Pro
 
     await prisma.workout.create({
         data: {
-            date: params.date,
+            date: new Date(params.date),
             notes: params.notes,
             userId: user.id
         }
