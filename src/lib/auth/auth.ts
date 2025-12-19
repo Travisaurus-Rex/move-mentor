@@ -3,8 +3,17 @@ import { prisma } from "../prisma"
 import { User } from "@/generated/prisma/client"
 import { authOptions } from "@/app/api/auth/authOptions";
 
+export async function getSession() {
+    return await getServerSession(authOptions);
+}
+
+export async function isAuthenticated(): Promise<boolean> {
+    const session = await getSession();
+    return !!session;
+}
+
 export async function getUser(): Promise<User> {
-    const session = await getServerSession(authOptions);
+    const session = await getSession();
     
     if (!session?.user?.email) {
         throw new Error('Not authenticated');

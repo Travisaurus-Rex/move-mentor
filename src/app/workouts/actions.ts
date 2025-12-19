@@ -1,6 +1,6 @@
 'use server'
 
-import { getUser } from "@/lib/auth/user";
+import { getUser } from "@/lib/auth/auth";
 import { prisma } from "@/lib/prisma";
 
 export async function createWorkout(params: { date: string, notes: string}): Promise<void> {
