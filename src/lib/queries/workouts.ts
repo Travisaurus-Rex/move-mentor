@@ -1,20 +1,8 @@
-import { prisma } from '@/lib/prisma'
-import { getServerSession } from 'next-auth'
+import { prisma } from '@/lib/prisma';
+import { getUser } from '../auth/user';
 
 export async function getUserWorkouts() {
-  const session = await getServerSession()
-
-  if (!session?.user?.email) {
-    throw new Error('Not authenticated')
-  }
-
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
-  })
-
-  if (!user) {
-    throw new Error('User not found')
-  }
+  const user = await getUser();
 
   return prisma.workout.findMany({
     where: {
@@ -24,4 +12,14 @@ export async function getUserWorkouts() {
       date: 'desc',
     },
   })
+}
+
+export async function getUserWorkoutsCount(): Promise<number> {
+  const user = await getUser();
+
+  return await prisma.workout.count({
+    where: {
+      userId: user.id
+    }
+  });
 }
