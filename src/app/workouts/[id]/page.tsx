@@ -22,9 +22,6 @@ export default async function WorkoutPage({ params }: Props) {
         </p>
       )}
 
-      <hr />
-
-      {/* Exercise selector (no submit yet) */}
       <label>
         Add exercise:
         <select>
@@ -40,11 +37,17 @@ export default async function WorkoutPage({ params }: Props) {
       <hr />
 
       <h2>Exercises</h2>
-      <ul>
-        {workout.exercises.map((e) => (
-          <li key={e.id}>{e.exercise.name}</li>
-        ))}
-      </ul>
+      {workout.exercises.length === 0 ? (
+        <p style={{ opacity: 0.7 }}>
+          No exercises added yet. Use the selector above to add one.
+        </p>
+      ) : (
+        <ul>
+          {workout.exercises.map((we) => (
+            <li key={we.id}>{we.exercise.name}</li>
+          ))}
+        </ul>
+      )}
     </main>
   );
 }
