@@ -1,19 +1,17 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { createWorkout } from '../actions'
-import { redirect } from 'next/navigation'
+import { useState } from "react";
+import { createWorkout } from "../actions";
+import { redirect } from "next/navigation";
 
 export default function NewWorkoutPage() {
-  const [date, setDate] = useState('')
-  const [notes, setNotes] = useState('')
+  const [date, setDate] = useState("");
+  const [notes, setNotes] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
+    e.preventDefault();
 
-    const id = await createWorkout({ date, notes});
-
-    if (!id) return;
+    const id = await createWorkout({ date, notes });
 
     redirect(`/workouts/${id}`);
   }
@@ -51,5 +49,5 @@ export default function NewWorkoutPage() {
         <button type="submit">Save Workout</button>
       </form>
     </main>
-  )
+  );
 }

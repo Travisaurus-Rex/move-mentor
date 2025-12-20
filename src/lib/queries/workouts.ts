@@ -1,20 +1,24 @@
-import { prisma } from '@/lib/prisma';
-import { getUser } from '../auth/auth';
-import { Workout } from '@/generated/prisma/client';
-import { notFound } from 'next/navigation';
+import { prisma } from "@/lib/prisma";
+import { getUser } from "../auth/auth";
+import { Workout } from "@/generated/prisma/client";
+import { notFound } from "next/navigation";
 
-export async function getWorkoutById(id: string): Promise<Workout> {
-    const workout = await prisma.workout.findFirst({
-        where: {
-            id
-        }
-    });
+export async function getWorkoutById(id: string) {
+  const user = await getUser();
 
-    if (!workout) {
-      notFound();
-    }
+  const workout = await prisma.workout.findFirst({
+    where: { id, userId: user.id },
+    include: {
+      exercises: {
+        include: {
+          exercise: true,
+        },
+      },
+    },
+  });
 
-    return workout;
+  if (!workout) notFound();
+  return workout;
 }
 
 export async function getUserWorkouts(): Promise<Workout[]> {
@@ -25,9 +29,9 @@ export async function getUserWorkouts(): Promise<Workout[]> {
       userId: user.id,
     },
     orderBy: {
-      date: 'desc',
+      date: "desc",
     },
-  })
+  });
 }
 
 export async function getUserWorkoutsCount(): Promise<number> {
@@ -35,7 +39,11 @@ export async function getUserWorkoutsCount(): Promise<number> {
 
   return await prisma.workout.count({
     where: {
-      userId: user.id
-    }
+      userId: user.id,
+    },
   });
+}
+
+export async function getAllExercises() {
+  return prisma.exercise.findMany({ orderBy: { name: "asc" } });
 }
