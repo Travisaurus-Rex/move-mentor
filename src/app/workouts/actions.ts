@@ -17,17 +17,3 @@ export async function createWorkout(params: { date: string, notes: string}): Pro
 
     return createdUser.id;
 }
-
-export async function getWorkoutById(id: string): Promise<Workout> {
-    const workout = await prisma.workout.findFirst({
-        where: {
-            id
-        }
-    });
-
-    if (!workout) {
-        throw new Error('Workout not found');
-    }
-
-    return workout;
-}

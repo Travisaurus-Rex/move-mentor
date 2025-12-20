@@ -1,4 +1,4 @@
-import { getWorkoutById } from "../actions";
+import { getWorkoutById } from "@/lib/queries/workouts";
 
 type PageProps = {
     params: {
