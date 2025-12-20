@@ -35,11 +35,21 @@ export async function getUserWorkouts(): Promise<Workout[]> {
 }
 
 export async function getUserWorkoutsCount(): Promise<number> {
-  const user = await getUser();
+  const { id } = await getUser();
 
   return await prisma.workout.count({
     where: {
-      userId: user.id,
+      userId: id,
+    },
+  });
+}
+
+export async function getUserExercisesCount(): Promise<number> {
+  const { id } = await getUser();
+
+  return await prisma.workoutExercise.count({
+    where: {
+      workout: { userId: id },
     },
   });
 }

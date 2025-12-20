@@ -4,8 +4,9 @@ import { addExerciseToWorkout } from "../actions";
 type Props = { params: { id: string } };
 
 export default async function WorkoutPage({ params }: Props) {
+  const { id } = await params;
   const [workout, exercises] = await Promise.all([
-    getWorkoutById(params.id),
+    getWorkoutById(id),
     getAllExercises(),
   ]);
 
