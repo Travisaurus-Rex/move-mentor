@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { createWorkout } from '../actions'
+import { redirect } from 'next/navigation'
 
 export default function NewWorkoutPage() {
   const [date, setDate] = useState('')
@@ -10,7 +11,11 @@ export default function NewWorkoutPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
-    await createWorkout({ date, notes});
+    const id = await createWorkout({ date, notes});
+
+    if (!id) return;
+
+    redirect(`/workouts/${id}`);
   }
 
   return (
