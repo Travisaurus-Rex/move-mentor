@@ -1,5 +1,5 @@
-import { Exercise } from "@/generated/prisma/client";
 import { getAllExercises, getWorkoutById } from "@/lib/queries/workouts";
+import { addExerciseToWorkout } from "../actions";
 
 type Props = { params: { id: string } };
 
@@ -22,17 +22,22 @@ export default async function WorkoutPage({ params }: Props) {
         </p>
       )}
 
-      <label>
-        Add exercise:
-        <select>
-          <option value="">Select…</option>
-          {exercises.map((e: Exercise) => (
+      <form action={addExerciseToWorkout}>
+        <input type="hidden" name="workoutId" value={workout.id} />
+
+        <select name="exerciseId" defaultValue="">
+          <option value="" disabled>
+            Select…
+          </option>
+          {exercises.map((e) => (
             <option key={e.id} value={e.id}>
               {e.name}
             </option>
           ))}
         </select>
-      </label>
+
+        <button type="submit">Add</button>
+      </form>
 
       <hr />
 
