@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { getUser } from '../auth/auth';
 import { Workout } from '@/generated/prisma/client';
+import { notFound } from 'next/navigation';
 
 export async function getWorkoutById(id: string): Promise<Workout> {
     const workout = await prisma.workout.findFirst({
@@ -10,7 +11,7 @@ export async function getWorkoutById(id: string): Promise<Workout> {
     });
 
     if (!workout) {
-        throw new Error('Workout not found');
+      notFound();
     }
 
     return workout;
