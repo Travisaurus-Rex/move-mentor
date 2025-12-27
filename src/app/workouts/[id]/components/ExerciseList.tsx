@@ -1,10 +1,11 @@
 import { ExerciseCard } from "./ExerciseCard";
+import { WorkoutExerciseWithRelations } from "@/lib/types";
 
 export function ExerciseList({
   exercises,
   workoutId,
 }: {
-  exercises: any[];
+  exercises: WorkoutExerciseWithRelations[];
   workoutId: string;
 }) {
   if (exercises.length === 0) {

@@ -1,11 +1,12 @@
 import { AddSetForm } from "./AddSetForm";
 import { SetList } from "./SetList";
+import { WorkoutExerciseWithRelations } from "@/lib/types";
 
 export function ExerciseCard({
   we,
   workoutId,
 }: {
-  we: any;
+  we: WorkoutExerciseWithRelations;
   workoutId: string;
 }) {
   return (

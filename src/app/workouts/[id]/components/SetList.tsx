@@ -1,4 +1,6 @@
-export function SetList({ sets }: { sets: any[] }) {
+import { Set } from "@/generated/prisma/client";
+
+export function SetList({ sets }: { sets: Set[] }) {
   if (sets.length === 0) {
     return (
       <p className="mt-2 text-sm text-muted-foreground">No sets logged yet.</p>

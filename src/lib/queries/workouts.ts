@@ -1,9 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import { getUser } from "../auth/auth";
-import { Workout } from "@/generated/prisma/client";
+import { Exercise, Workout } from "@/generated/prisma/client";
 import { notFound } from "next/navigation";
+import { WorkoutWithExercisesAndSets } from "../types";
 
-export async function getWorkoutById(id: string) {
+export async function getWorkoutById(
+  id: string
+): Promise<WorkoutWithExercisesAndSets> {
   const user = await getUser();
 
   const workout = await prisma.workout.findFirst({
@@ -58,8 +61,8 @@ export async function getUserExercisesCount(): Promise<number> {
   });
 }
 
-export async function getAllExercises() {
-  return prisma.exercise.findMany({ orderBy: { name: "asc" } });
+export async function getAllExercises(): Promise<Exercise[]> {
+  return await prisma.exercise.findMany({ orderBy: { name: "asc" } });
 }
 
 export async function getDashboardStats() {
