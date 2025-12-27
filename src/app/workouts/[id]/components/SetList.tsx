@@ -1,4 +1,4 @@
-import { Set } from "@/generated/prisma/client";
+import { Set } from "@/lib/types";
 
 export function SetList({ sets }: { sets: Set[] }) {
   if (sets.length === 0) {

@@ -1,8 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { getUser } from "../auth/auth";
-import { Exercise, Workout } from "@/generated/prisma/client";
+import { Exercise, Workout, WorkoutWithExercisesAndSets } from "@/lib/types";
 import { notFound } from "next/navigation";
-import { WorkoutWithExercisesAndSets } from "../types";
 
 export async function getWorkoutById(
   id: string

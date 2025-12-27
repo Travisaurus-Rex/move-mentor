@@ -1,4 +1,4 @@
-import { Workout } from "@/generated/prisma/client";
+import { Workout } from "@/lib/types";
 
 export function WorkoutHeader({ workout }: { workout: Workout }) {
   return (

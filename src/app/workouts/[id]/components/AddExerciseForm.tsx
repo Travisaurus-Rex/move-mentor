@@ -1,4 +1,4 @@
-import { Exercise } from "@/generated/prisma/client";
+import { Exercise } from "@/lib/types";
 import { addExerciseToWorkout } from "../../actions";
 
 export function AddExerciseForm({
