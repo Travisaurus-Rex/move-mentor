@@ -1,4 +1,3 @@
-// components/AddSetForm.tsx
 import { addSetToExercise } from "../../actions";
 
 export function AddSetForm({

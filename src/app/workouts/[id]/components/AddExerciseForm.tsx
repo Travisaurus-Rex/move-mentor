@@ -1,5 +1,3 @@
-// components/AddExerciseForm.tsx
-
 import { Exercise } from "@/generated/prisma/client";
 import { addExerciseToWorkout } from "../../actions";
 
