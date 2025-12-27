@@ -50,3 +50,38 @@ export async function addExerciseToWorkout(formData: FormData): Promise<void> {
 
   redirect(`/workouts/${workoutId}`);
 }
+
+export async function addSetToExercise(formData: FormData) {
+  const user = await getUser();
+
+  const workoutId = formData.get("workoutId") as string;
+  const workoutExerciseId = formData.get("workoutExerciseId") as string;
+
+  const reps = Number(formData.get("reps"));
+  const weight = formData.get("weight") ? Number(formData.get("weight")) : null;
+  const rpe = formData.get("rpe") ? Number(formData.get("rpe")) : null;
+  const notes = (formData.get("notes") as string) || null;
+
+  if (!workoutId || !workoutExerciseId || !reps) return;
+
+  const we = await prisma.workoutExercise.findFirst({
+    where: {
+      id: workoutExerciseId,
+      workout: { userId: user.id },
+    },
+    select: { id: true },
+  });
+  if (!we) return;
+
+  await prisma.set.create({
+    data: {
+      workoutExerciseId,
+      reps,
+      weight,
+      rpe,
+      notes,
+    },
+  });
+
+  redirect(`/workouts/${workoutId}`);
+}
