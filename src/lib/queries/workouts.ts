@@ -57,3 +57,35 @@ export async function getUserExercisesCount(): Promise<number> {
 export async function getAllExercises() {
   return prisma.exercise.findMany({ orderBy: { name: "asc" } });
 }
+
+export async function getDashboardStats() {
+  const user = await getUser();
+
+  const [workoutCount, exerciseCount, lastWorkout, recentWorkoutCount] =
+    await Promise.all([
+      prisma.workout.count({ where: { userId: user.id } }),
+      prisma.workoutExercise.count({
+        where: { workout: { userId: user.id } },
+      }),
+      prisma.workout.findFirst({
+        where: { userId: user.id },
+        orderBy: { date: "desc" },
+        select: { date: true },
+      }),
+      prisma.workout.count({
+        where: {
+          userId: user.id,
+          date: {
+            gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+          },
+        },
+      }),
+    ]);
+
+  return {
+    workoutCount,
+    exerciseCount,
+    lastWorkoutDate: lastWorkout?.date ?? null,
+    workoutsLast7Days: recentWorkoutCount,
+  };
+}
