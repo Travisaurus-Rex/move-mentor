@@ -10,8 +10,12 @@ export async function getWorkoutById(id: string) {
     where: { id, userId: user.id },
     include: {
       exercises: {
+        orderBy: { order: "asc" },
         include: {
           exercise: true,
+          sets: {
+            orderBy: { createdAt: "asc" },
+          },
         },
       },
     },
