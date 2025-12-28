@@ -150,3 +150,32 @@ export async function deleteSet(formData: FormData) {
 
   redirect(`/workouts/${workoutId}`);
 }
+
+export async function deleteExerciseFromWorkout(formData: FormData) {
+  const user = await getUser();
+
+  const workoutExerciseId = formData.get("workoutExerciseId") as string;
+  const workoutId = formData.get("workoutId") as string;
+
+  if (!workoutExerciseId || !workoutId) return;
+
+  const we = await prisma.workoutExercise.findFirst({
+    where: {
+      id: workoutExerciseId,
+      workout: { userId: user.id },
+    },
+    select: { id: true },
+  });
+
+  if (!we) return;
+
+  await prisma.set.deleteMany({
+    where: { workoutExerciseId },
+  });
+
+  await prisma.workoutExercise.delete({
+    where: { id: workoutExerciseId },
+  });
+
+  redirect(`/workouts/${workoutId}`);
+}
