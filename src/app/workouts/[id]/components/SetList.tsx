@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { Set } from "@/lib/types";
-import { updateSet } from "../../actions";
+import { deleteSet, updateSet } from "../../actions";
 
 type Props = {
   sets: Set[];
@@ -93,6 +93,14 @@ export function SetList({ sets, workoutId }: Props) {
                     className="text-xs font-medium text-primary hover:underline"
                   >
                     Save
+                  </button>
+
+                  <button
+                    type="submit"
+                    formAction={deleteSet}
+                    className="text-xs text-destructive hover:underline"
+                  >
+                    Delete
                   </button>
 
                   <button

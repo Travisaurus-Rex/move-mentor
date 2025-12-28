@@ -123,3 +123,30 @@ export async function updateSet(formData: FormData) {
 
   redirect(`/workouts/${workoutId}`);
 }
+
+export async function deleteSet(formData: FormData) {
+  const user = await getUser();
+
+  const setId = formData.get("setId") as string;
+  const workoutId = formData.get("workoutId") as string;
+
+  if (!setId || !workoutId) return;
+
+  const set = await prisma.set.findFirst({
+    where: {
+      id: setId,
+      workoutExercise: {
+        workout: { userId: user.id },
+      },
+    },
+    select: { id: true },
+  });
+
+  if (!set) return;
+
+  await prisma.set.delete({
+    where: { id: setId },
+  });
+
+  redirect(`/workouts/${workoutId}`);
+}
