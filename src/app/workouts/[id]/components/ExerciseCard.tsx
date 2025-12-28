@@ -1,5 +1,6 @@
 import { deleteExerciseFromWorkout } from "../../actions";
 import { AddSetForm } from "./AddSetForm";
+import { RemoveExerciseButton } from "./RemoveExerciseButton";
 import { SetList } from "./SetList";
 import { WorkoutExerciseWithRelations } from "@/lib/types";
 
@@ -11,24 +12,14 @@ export function ExerciseCard({
   workoutId: string;
 }) {
   return (
-    <li className="rounded-lg border border-border p-4">
-      <h3 className="font-medium flex justify-between">
-        {we.exercise.name}
-        <form action={deleteExerciseFromWorkout} className="ml-auto">
-          <input type="hidden" name="workoutExerciseId" value={we.id} />
-          <input type="hidden" name="workoutId" value={workoutId} />
+    <li className="group rounded-lg border border-border p-4">
+      <div className="flex items-center justify-between">
+        <h3 className="font-medium">{we.exercise.name}</h3>
 
-          <button
-            type="submit"
-            className="text-xs text-destructive hover:underline"
-          >
-            Remove
-          </button>
-        </form>
-      </h3>
+        <RemoveExerciseButton workoutExerciseId={we.id} workoutId={workoutId} />
+      </div>
 
       <SetList sets={we.sets} workoutId={workoutId} />
-
       <AddSetForm workoutId={workoutId} workoutExerciseId={we.id} />
     </li>
   );
