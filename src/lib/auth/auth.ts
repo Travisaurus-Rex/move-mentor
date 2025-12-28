@@ -1,31 +1,31 @@
-import { getServerSession } from "next-auth"
-import { prisma } from "../prisma"
-import { User } from "@/generated/prisma/client"
+import { getServerSession } from "next-auth";
+import { prisma } from "../prisma";
+import { User } from "@/generated/prisma/client";
 import { authOptions } from "@/app/api/auth/authOptions";
 
 export async function getSession() {
-    return await getServerSession(authOptions);
+  return await getServerSession(authOptions);
 }
 
 export async function isAuthenticated(): Promise<boolean> {
-    const session = await getSession();
-    return !!session;
+  const session = await getSession();
+  return !!session;
 }
 
 export async function getUser(): Promise<User> {
-    const session = await getSession();
-    
-    if (!session?.user?.email) {
-        throw new Error('Not authenticated');
-    }
+  const session = await getSession();
 
-    const user = await prisma.user.findUnique({
-        where: { email: session.user.email },
-    });
+  if (!session?.user?.email) {
+    throw new Error("Not authenticated");
+  }
 
-    if (!user) {
-        throw new Error('User not found');
-    }
+  const user = await prisma.user.findUnique({
+    where: { email: session.user.email },
+  });
 
-    return user;
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  return user;
 }
