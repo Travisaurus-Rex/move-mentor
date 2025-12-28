@@ -3,13 +3,15 @@
 import { useState } from "react";
 import type { Set } from "@/lib/types";
 import { deleteSet, updateSet } from "../../actions";
+import { ExerciseCategory } from "@/generated/prisma/enums";
 
 type Props = {
   sets: Set[];
   workoutId: string;
+  category: ExerciseCategory;
 };
 
-export function SetList({ sets, workoutId }: Props) {
+export function SetList({ sets, workoutId, category }: Props) {
   const [editingSetId, setEditingSetId] = useState<string | null>(null);
 
   if (sets.length === 0) {
@@ -24,7 +26,7 @@ export function SetList({ sets, workoutId }: Props) {
         const isEditing = editingSetId === set.id;
 
         return (
-          <li key={set.id} className="relative bg-background">
+          <li key={set.id}>
             <div className="min-h-[2.25rem] flex items-center">
               {!isEditing ? (
                 <div className="flex w-full items-center gap-3 text-sm">
@@ -33,8 +35,20 @@ export function SetList({ sets, workoutId }: Props) {
                   </span>
 
                   <span className="flex-1 truncate">
-                    {set.weight ?? "—"} × {set.reps ?? "—"}
-                    {set.rpe ? ` (RPE ${set.rpe})` : ""}
+                    {category === "STRENGTH" && (
+                      <>
+                        {set.weight ?? "—"} × {set.reps ?? "—"}
+                        {set.rpe ? ` (RPE ${set.rpe})` : ""}
+                      </>
+                    )}
+
+                    {category === "CARDIO" && (
+                      <>
+                        {set.duration ?? "—"} min
+                        {set.distance ? ` • ${set.distance}` : ""}
+                      </>
+                    )}
+
                     {set.notes ? ` — ${set.notes}` : ""}
                   </span>
 
@@ -54,43 +68,68 @@ export function SetList({ sets, workoutId }: Props) {
                   <input type="hidden" name="setId" value={set.id} />
                   <input type="hidden" name="workoutId" value={workoutId} />
 
-                  <input
-                    name="reps"
-                    placeholder="Reps"
-                    type="number"
-                    defaultValue={set.reps ?? ""}
-                    className="w-14 rounded-md border px-2 py-1"
-                  />
+                  {category === ExerciseCategory.STRENGTH && (
+                    <>
+                      <input
+                        name="reps"
+                        type="number"
+                        placeholder="Reps"
+                        defaultValue={set.reps ?? ""}
+                        className="w-14 rounded-md border px-2 py-1"
+                      />
 
-                  <input
-                    name="weight"
-                    placeholder="Weight"
-                    type="number"
-                    step="0.5"
-                    defaultValue={set.weight ?? ""}
-                    className="w-20 rounded-md border px-2 py-1"
-                  />
+                      <input
+                        name="weight"
+                        type="number"
+                        step="0.5"
+                        placeholder="Weight"
+                        defaultValue={set.weight ?? ""}
+                        className="w-20 rounded-md border px-2 py-1"
+                      />
 
-                  <input
-                    name="rpe"
-                    placeholder="RPE"
-                    type="number"
-                    step="0.5"
-                    defaultValue={set.rpe ?? ""}
-                    className="w-20 rounded-md border px-2 py-1"
-                  />
+                      <input
+                        name="rpe"
+                        type="number"
+                        step="0.5"
+                        placeholder="RPE"
+                        defaultValue={set.rpe ?? ""}
+                        className="w-20 rounded-md border px-2 py-1"
+                      />
+                    </>
+                  )}
+
+                  {category === ExerciseCategory.CARDIO && (
+                    <>
+                      <input
+                        name="duration"
+                        type="number"
+                        placeholder="Duration (min)"
+                        defaultValue={set.duration ?? ""}
+                        className="w-28 rounded-md border px-2 py-1"
+                      />
+
+                      <input
+                        name="distance"
+                        type="number"
+                        step="0.01"
+                        placeholder="Distance"
+                        defaultValue={set.distance ?? ""}
+                        className="w-28 rounded-md border px-2 py-1"
+                      />
+                    </>
+                  )}
 
                   <input
                     name="notes"
                     type="text"
-                    defaultValue={set.notes ?? ""}
                     placeholder="Notes"
+                    defaultValue={set.notes ?? ""}
                     className="flex-1 rounded-md border px-2 py-1"
                   />
 
                   <button
                     type="submit"
-                    className="text-xs font-medium text-primary hover:underline"
+                    className="text-xs font-medium hover:underline"
                   >
                     Save
                   </button>
@@ -98,7 +137,7 @@ export function SetList({ sets, workoutId }: Props) {
                   <button
                     type="submit"
                     formAction={deleteSet}
-                    className="text-xs text-destructive hover:underline"
+                    className="text-xs text-red-600 hover:underline"
                   >
                     Delete
                   </button>

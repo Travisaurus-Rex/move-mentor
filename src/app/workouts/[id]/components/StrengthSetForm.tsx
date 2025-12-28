@@ -1,6 +1,6 @@
 import { addSetToExercise } from "../../actions";
 
-export function AddSetForm({
+export function StrengthSetForm({
   workoutId,
   workoutExerciseId,
 }: {

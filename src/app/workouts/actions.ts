@@ -1,5 +1,6 @@
 "use server";
 
+import { ExerciseCategory } from "@/generated/prisma/enums";
 import { getUser } from "@/lib/auth/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
@@ -54,34 +55,68 @@ export async function addExerciseToWorkout(formData: FormData): Promise<void> {
 export async function addSetToExercise(formData: FormData) {
   const user = await getUser();
 
-  const workoutId = formData.get("workoutId") as string;
-  const workoutExerciseId = formData.get("workoutExerciseId") as string;
+  const workoutId = formData.get("workoutId") as string | null;
+  const workoutExerciseId = formData.get("workoutExerciseId") as string | null;
 
-  const reps = Number(formData.get("reps"));
-  const weight = formData.get("weight") ? Number(formData.get("weight")) : null;
-  const rpe = formData.get("rpe") ? Number(formData.get("rpe")) : null;
-  const notes = (formData.get("notes") as string) || null;
+  if (!workoutId || !workoutExerciseId) return;
 
-  if (!workoutId || !workoutExerciseId || !reps) return;
-
-  const we = await prisma.workoutExercise.findFirst({
+  const workoutExercise = await prisma.workoutExercise.findFirst({
     where: {
       id: workoutExerciseId,
       workout: { userId: user.id },
     },
-    select: { id: true },
-  });
-  if (!we) return;
-
-  await prisma.set.create({
-    data: {
-      workoutExerciseId,
-      reps,
-      weight,
-      rpe,
-      notes,
+    include: {
+      exercise: {
+        select: { category: true },
+      },
     },
   });
+
+  if (!workoutExercise) return;
+
+  const category = workoutExercise.exercise.category;
+
+  if (category === ExerciseCategory.STRENGTH) {
+    const repsRaw = formData.get("reps");
+    if (!repsRaw) return;
+
+    const reps = Number(repsRaw);
+    if (!Number.isFinite(reps) || reps <= 0) return;
+
+    const weightRaw = formData.get("weight");
+    const rpeRaw = formData.get("rpe");
+    const notesRaw = formData.get("notes");
+
+    await prisma.set.create({
+      data: {
+        workoutExerciseId,
+        reps,
+        weight: weightRaw ? Number(weightRaw) : null,
+        rpe: rpeRaw ? Number(rpeRaw) : null,
+        notes: notesRaw ? String(notesRaw) : null,
+      },
+    });
+  }
+
+  if (category === ExerciseCategory.CARDIO) {
+    const durationRaw = formData.get("duration");
+    if (!durationRaw) return;
+
+    const duration = Number(durationRaw);
+    if (!Number.isFinite(duration) || duration <= 0) return;
+
+    const distanceRaw = formData.get("distance");
+    const notesRaw = formData.get("notes");
+
+    await prisma.set.create({
+      data: {
+        workoutExerciseId,
+        duration,
+        distance: distanceRaw ? Number(distanceRaw) : null,
+        notes: notesRaw ? String(notesRaw) : null,
+      },
+    });
+  }
 
   redirect(`/workouts/${workoutId}`);
 }
@@ -89,14 +124,8 @@ export async function addSetToExercise(formData: FormData) {
 export async function updateSet(formData: FormData) {
   const user = await getUser();
 
-  const setId = formData.get("setId") as string;
-  const workoutId = formData.get("workoutId") as string;
-
-  const reps = formData.get("reps");
-  const weight = formData.get("weight");
-  const rpe = formData.get("rpe");
-  const notes = formData.get("notes");
-
+  const setId = formData.get("setId") as string | null;
+  const workoutId = formData.get("workoutId") as string | null;
   if (!setId || !workoutId) return;
 
   const set = await prisma.set.findFirst({
@@ -106,20 +135,57 @@ export async function updateSet(formData: FormData) {
         workout: { userId: user.id },
       },
     },
-    select: { id: true },
+    include: {
+      workoutExercise: {
+        include: {
+          exercise: { select: { category: true } },
+        },
+      },
+    },
   });
 
   if (!set) return;
 
-  await prisma.set.update({
-    where: { id: setId },
-    data: {
-      reps: reps ? Number(reps) : null,
-      weight: weight ? Number(weight) : null,
-      rpe: rpe ? Number(rpe) : null,
-      notes: notes ? String(notes) : null,
-    },
-  });
+  const category = set.workoutExercise.exercise.category;
+
+  if (category === ExerciseCategory.STRENGTH) {
+    const reps = formData.get("reps");
+    const weight = formData.get("weight");
+    const rpe = formData.get("rpe");
+    const notes = formData.get("notes");
+
+    await prisma.set.update({
+      where: { id: setId },
+      data: {
+        reps: reps ? Number(reps) : null,
+        weight: weight ? Number(weight) : null,
+        rpe: rpe ? Number(rpe) : null,
+        notes: notes ? String(notes) : null,
+        duration: null,
+        distance: null,
+      },
+    });
+  }
+
+  if (category === ExerciseCategory.CARDIO) {
+    const duration = formData.get("duration");
+    const distance = formData.get("distance");
+    const notes = formData.get("notes");
+
+    if (!duration) return;
+
+    await prisma.set.update({
+      where: { id: setId },
+      data: {
+        duration: Number(duration),
+        distance: distance ? Number(distance) : null,
+        notes: notes ? String(notes) : null,
+        reps: null,
+        weight: null,
+        rpe: null,
+      },
+    });
+  }
 
   redirect(`/workouts/${workoutId}`);
 }

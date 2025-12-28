@@ -1,5 +1,5 @@
-import { deleteExerciseFromWorkout } from "../../actions";
-import { AddSetForm } from "./AddSetForm";
+import { StrengthSetForm } from "./StrengthSetForm";
+import { CardioSetForm } from "./CardioSetForm";
 import { RemoveExerciseButton } from "./RemoveExerciseButton";
 import { SetList } from "./SetList";
 import { WorkoutExerciseWithRelations } from "@/lib/types";
@@ -19,8 +19,19 @@ export function ExerciseCard({
         <RemoveExerciseButton workoutExerciseId={we.id} workoutId={workoutId} />
       </div>
 
-      <SetList sets={we.sets} workoutId={workoutId} />
-      <AddSetForm workoutId={workoutId} workoutExerciseId={we.id} />
+      <SetList
+        sets={we.sets}
+        workoutId={workoutId}
+        category={we.exercise.category}
+      />
+
+      {we.exercise.category === "STRENGTH" && (
+        <StrengthSetForm workoutId={workoutId} workoutExerciseId={we.id} />
+      )}
+
+      {we.exercise.category === "CARDIO" && (
+        <CardioSetForm workoutId={workoutId} workoutExerciseId={we.id} />
+      )}
     </li>
   );
 }
