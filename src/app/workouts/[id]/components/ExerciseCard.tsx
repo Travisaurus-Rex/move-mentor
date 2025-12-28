@@ -3,6 +3,7 @@ import { CardioSetForm } from "./CardioSetForm";
 import { RemoveExerciseButton } from "./RemoveExerciseButton";
 import { SetList } from "./SetList";
 import { WorkoutExerciseWithRelations } from "@/lib/types";
+import { Card } from "@/app/components/Card";
 
 export function ExerciseCard({
   we,
@@ -12,7 +13,7 @@ export function ExerciseCard({
   workoutId: string;
 }) {
   return (
-    <li className="group shadow-md rounded-lg p-4 bg-[var(--bg-med)]">
+    <Card className="group p-4">
       <div className="flex items-center justify-between">
         <h3 className="font-medium text-2xl">{we.exercise.name}</h3>
 
@@ -32,6 +33,6 @@ export function ExerciseCard({
       {we.exercise.category === "CARDIO" && (
         <CardioSetForm workoutId={workoutId} workoutExerciseId={we.id} />
       )}
-    </li>
+    </Card>
   );
 }

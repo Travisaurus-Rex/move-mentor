@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getUser } from "@/lib/auth/auth";
 import { getDashboardStats, getUserWorkouts } from "@/lib/queries/workouts";
+import { Card } from "../components/Card";
 
 export default async function DashboardHomePage() {
   const [user, stats, workouts] = await Promise.all([
@@ -19,29 +20,29 @@ export default async function DashboardHomePage() {
       </header>
 
       <section className="grid grid-cols-1 md:grid-cols-6 grid-rows-3 gap-4">
-        <div className="md:col-span-2 md:row-span-2 rounded-xl bg-[var(--bg-light)] p-6">
+        <Card className="p-6 md:col-span-2 md:row-span-2">
           <p className="text-sm text-muted-foreground">Total Workouts</p>
           <p className="mt-4 text-5xl font-semibold">{workoutCount}</p>
-        </div>
+        </Card>
 
-        <div className="md:col-span-2 rounded-xl bg-[var(--bg-light)] p-6">
+        <Card className="p-6 md:col-span-2">
           <p className="text-sm text-muted-foreground">Exercises Logged</p>
           <p className="mt-4 text-4xl font-semibold">{exerciseCount}</p>
-        </div>
+        </Card>
 
-        <div className="md:col-span-2 rounded-xl bg-[var(--bg-light)] p-6">
+        <Card className="p-6 md:col-span-2">
           <p className="text-sm text-muted-foreground">Last Workout</p>
           <p className="mt-4 text-lg font-medium">
             {lastWorkoutDate ? lastWorkoutDate.toDateString() : "—"}
           </p>
-        </div>
+        </Card>
 
-        <div className="md:col-span-2 rounded-xl bg-[var(--bg-light)] p-6">
+        <Card className="p-6 md:col-span-2">
           <p className="text-sm text-muted-foreground">Workouts (7 days)</p>
           <p className="mt-4 text-4xl font-semibold">{workoutsLast7Days}</p>
-        </div>
+        </Card>
 
-        <div className="md:col-span-4 md:row-span-2 rounded-xl bg-[var(--bg-light)] p-6">
+        <Card className="p-6 md:col-span-4 md:row-span-2">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-medium">Recent Workouts</h2>
             <Link
@@ -68,14 +69,14 @@ export default async function DashboardHomePage() {
               ))}
             </ul>
           )}
-        </div>
-        <div
+        </Card>
+        <Card
           className=" md:col-span-2
             md:row-span-2
             md:col-start-5
             md:row-start-2
             rounded-xl
-            bg-[var(--bg-light)]
+            bg-[var(--bg-med)]
             p-6
             flex
             flex-col
@@ -93,7 +94,7 @@ export default async function DashboardHomePage() {
           >
             View profile →
           </Link>
-        </div>
+        </Card>
       </section>
     </div>
   );
