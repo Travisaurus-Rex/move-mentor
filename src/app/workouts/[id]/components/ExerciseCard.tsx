@@ -12,9 +12,9 @@ export function ExerciseCard({
   workoutId: string;
 }) {
   return (
-    <li className="group rounded-lg border border-border p-4">
+    <li className="group shadow-md rounded-lg p-4 bg-[var(--bg-med)]">
       <div className="flex items-center justify-between">
-        <h3 className="font-medium">{we.exercise.name}</h3>
+        <h3 className="font-medium text-2xl">{we.exercise.name}</h3>
 
         <RemoveExerciseButton workoutExerciseId={we.id} workoutId={workoutId} />
       </div>

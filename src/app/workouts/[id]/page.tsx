@@ -13,10 +13,10 @@ export default async function WorkoutPage({ params }: Props) {
   ]);
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-8 space-y-8">
+    <div className="mx-auto max-w-3xl px-6 py-8 space-y-8">
       <WorkoutHeader workout={workout} />
       <AddExerciseForm workoutId={workout.id} exercises={exercises} />
       <ExerciseList exercises={workout.exercises} workoutId={workout.id} />
-    </main>
+    </div>
   );
 }
