@@ -28,19 +28,19 @@ export function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
 
             {open && (
               <div
-                className="absolute right-0 mt-2 w-40 rounded-md bg-white text-black shadow-lg"
+                className="absolute right-0 mt-2 w-40 rounded-md bg-white text-black shadow-lg overflow-hidden"
                 onMouseLeave={() => setOpen(false)}
               >
                 <Link
                   href="/profile"
-                  className="block px-4 py-2 text-sm hover:bg-gray-100"
+                  className="block px-4 py-2 text-sm hover:bg-gray-200"
                 >
                   Profile
                 </Link>
 
                 <button
                   onClick={() => signOut({ callbackUrl: "/" })}
-                  className="flex w-full items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100"
+                  className="cursor-pointer flex w-full items-center gap-2 px-4 py-2 text-sm hover:bg-gray-200"
                 >
                   <LogOut className="h-4 w-4" />
                   Sign out
