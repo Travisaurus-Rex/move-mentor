@@ -13,7 +13,7 @@ export default async function DashboardHomePage() {
     stats;
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-8 space-y-8">
+    <div className="mx-auto max-w-6xl px-6 py-8 space-y-8">
       <header>
         <h1 className="text-2xl font-semibold">Dashboard</h1>
       </header>
@@ -95,6 +95,6 @@ export default async function DashboardHomePage() {
           </Link>
         </div>
       </section>
-    </main>
+    </div>
   );
 }
