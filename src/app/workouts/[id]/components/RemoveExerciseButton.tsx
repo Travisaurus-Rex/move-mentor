@@ -1,5 +1,6 @@
 import { Trash2 } from "lucide-react";
 import { deleteExerciseFromWorkout } from "../../actions";
+import { Button } from "@/app/components/Button";
 
 type Props = {
   workoutExerciseId: string;
@@ -12,18 +13,9 @@ export function RemoveExerciseButton({ workoutExerciseId, workoutId }: Props) {
       <input type="hidden" name="workoutExerciseId" value={workoutExerciseId} />
       <input type="hidden" name="workoutId" value={workoutId} />
 
-      <button
-        type="submit"
-        aria-label="Remove exercise"
-        className="cursor-pointer
-          opacity-0 group-hover:opacity-100
-          transition-opacity
-          text-red-600 hover:text-red-700
-          focus-visible:opacity-100
-        "
-      >
+      <Button variant="rose" type="submit">
         <Trash2 className="h-5 w-5" />
-      </button>
+      </Button>
     </form>
   );
 }

@@ -1,5 +1,6 @@
 import { Exercise } from "@/lib/types";
 import { addExerciseToWorkout } from "../../actions";
+import { Button } from "@/app/components/Button";
 
 export function AddExerciseForm({
   workoutId,
@@ -27,12 +28,7 @@ export function AddExerciseForm({
         ))}
       </select>
 
-      <button
-        type="submit"
-        className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
-      >
-        Add
-      </button>
+      <Button type="submit">Add</Button>
     </form>
   );
 }

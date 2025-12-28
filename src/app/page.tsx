@@ -1,5 +1,6 @@
 import { isAuthenticated } from "@/lib/auth/auth";
 import { redirect } from "next/navigation";
+import { Button } from "./components/Button";
 
 export default async function Home() {
   const isLoggedIn: boolean = await isAuthenticated();
@@ -16,12 +17,12 @@ export default async function Home() {
         motivated, see your progress, and reach your peak form!
       </p>
 
-      <a
+      <Button
         href="/api/auth/signin"
         className="bg-blue-500 hover:bg-blue-600 py-3 px-5 rounded text-white"
       >
         Sign in with GitHub
-      </a>
+      </Button>
     </main>
   );
 }

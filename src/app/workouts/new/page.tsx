@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createWorkout } from "../actions";
 import { redirect } from "next/navigation";
 import { Card } from "@/app/components/Card";
+import { Button } from "@/app/components/Button";
 
 export default function NewWorkoutPage() {
   const [date, setDate] = useState("");
@@ -70,22 +71,9 @@ export default function NewWorkoutPage() {
           </div>
 
           <div className="pt-4">
-            <button
-              type="submit"
-              className="
-                cursor-pointer
-                w-full
-                bg-blue-500
-                text-white
-                font-bold
-                py-3
-                rounded-lg
-                shadow-[0_5px_10px_rgba(0,0,0,0.3)]
-                hover:bg-blue-600
-                transition-all"
-            >
+            <Button className="w-full" variant="blue" type="submit">
               Save Workout
-            </button>
+            </Button>
           </div>
         </form>
       </Card>
