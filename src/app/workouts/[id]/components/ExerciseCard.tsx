@@ -13,7 +13,7 @@ export function ExerciseCard({
     <li className="rounded-lg border border-border p-4">
       <h3 className="font-medium">{we.exercise.name}</h3>
 
-      <SetList sets={we.sets} />
+      <SetList sets={we.sets} workoutId={workoutId} />
 
       <AddSetForm workoutId={workoutId} workoutExerciseId={we.id} />
     </li>
