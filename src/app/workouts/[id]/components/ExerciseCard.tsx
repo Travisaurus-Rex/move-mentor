@@ -4,6 +4,7 @@ import { RemoveExerciseButton } from "./RemoveExerciseButton";
 import { SetList } from "./SetList";
 import { WorkoutExerciseWithRelations } from "@/lib/types";
 import { Card } from "@/app/components/Card";
+import { ExerciseCategory } from "@/generated/prisma/enums";
 
 export function ExerciseCard({
   we,
@@ -26,11 +27,11 @@ export function ExerciseCard({
         category={we.exercise.category}
       />
 
-      {we.exercise.category === "STRENGTH" && (
+      {we.exercise.category === ExerciseCategory.STRENGTH && (
         <StrengthSetForm workoutId={workoutId} workoutExerciseId={we.id} />
       )}
 
-      {we.exercise.category === "CARDIO" && (
+      {we.exercise.category === ExerciseCategory.CARDIO && (
         <CardioSetForm workoutId={workoutId} workoutExerciseId={we.id} />
       )}
     </Card>
