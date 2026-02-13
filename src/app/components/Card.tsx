@@ -11,7 +11,7 @@ export function Card({ children, className }: CardProps) {
       className={`
         bg-[var(--bg-med)]
         rounded-xl
-        shadow-[0_10px_20px_rgba(0,0,0,0.08)]
+        shadow-[0_5px_10px_rgba(0,0,0,0.08)]
         relative
         before:absolute
         before:inset-0

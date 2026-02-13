@@ -50,9 +50,8 @@ export function Button({
   const classes = clsx(
     `
       relative
-      rounded-lg
-      p-3
-      font-bold
+      rounded-sm
+      p-2.5
       cursor-pointer
 
       transition-all
@@ -65,7 +64,7 @@ export function Button({
     styles.base,
     styles.hover,
     styles.active,
-    className
+    className,
   );
 
   if ("href" in props) {
