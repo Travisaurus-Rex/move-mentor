@@ -162,7 +162,7 @@ export default function AboutPage() {
                 Everything you need.
                 <br />
                 <span className="text-muted-foreground">
-                  Nothing you don't.
+                  Nothing you don&apos;t.
                 </span>
               </h2>
             </div>
@@ -217,7 +217,7 @@ export default function AboutPage() {
                 Simple by design
               </p>
               <h2 className="text-4xl font-bold tracking-tighter">
-                Three steps. That's it.
+                Three steps. That&apos;s it.
               </h2>
             </div>
           </RevealCard>

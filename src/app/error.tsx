@@ -20,7 +20,7 @@ export default function Error({
         Something went wrong
       </h2>
       <p className="text-sm text-muted-foreground">
-        We couldn't connect to the database. Please try again in a moment.
+        We couldn&apos;t connect to the database. Please try again in a moment.
       </p>
       <Button onClick={reset}>Try again</Button>
     </div>
