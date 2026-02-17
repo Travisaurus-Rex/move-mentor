@@ -1,4 +1,4 @@
-import { Prisma } from "@/generated/prisma/client";
+import { Prisma } from "@prisma/client/client";
 
 export type WorkoutWithExercisesAndSets = Prisma.WorkoutGetPayload<{
   include: {

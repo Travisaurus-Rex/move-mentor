@@ -3,7 +3,7 @@ import { CardioSetForm } from "./CardioSetForm";
 import { RemoveExerciseButton } from "./RemoveExerciseButton";
 import { SetList } from "./SetList";
 import { WorkoutExerciseWithRelations } from "@/lib/types";
-import { ExerciseCategory } from "@/generated/prisma/enums";
+import { ExerciseCategory } from "@prisma/client/enums";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
