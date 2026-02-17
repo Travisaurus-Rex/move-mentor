@@ -10,4 +10,4 @@ export type {
   User,
   Account,
   Session,
-} from "@prisma/client/client";
+} from "@prisma/client";
