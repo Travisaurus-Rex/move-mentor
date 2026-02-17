@@ -24,17 +24,6 @@ export function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
     <div className="fixed z-50 w-full border-b bg-background/80 backdrop-blur-sm px-6 py-3 flex items-center gap-4">
       <NavigationMenu>
         <NavigationMenuList>
-          {!isLoggedIn && (
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                asChild
-                className={navigationMenuTriggerStyle()}
-              >
-                <Link href="/">Home</Link>
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-          )}
-
           <NavigationMenuItem>
             <NavigationMenuLink
               asChild
