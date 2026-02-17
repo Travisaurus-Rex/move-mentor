@@ -5,7 +5,7 @@ import type { Set } from "@/lib/types";
 import { deleteSet, updateSet } from "../../actions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ExerciseCategory } from "@/generated/prisma/enums";
+import { ExerciseCategory } from "@prisma/client";
 
 type Props = {
   sets: Set[];

@@ -1,6 +1,6 @@
 "use server";
 
-import { ExerciseCategory } from "@prisma/client/enums";
+import { ExerciseCategory } from "@prisma/client";
 import { getUser } from "@/lib/auth/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";

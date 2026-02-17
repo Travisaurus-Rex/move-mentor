@@ -1,4 +1,4 @@
-import { ExerciseCategory } from "@/generated/prisma/enums";
+import { ExerciseCategory } from "@prisma/client";
 import { prisma } from "../src/lib/prisma";
 
 async function main() {
