@@ -1,26 +1,38 @@
 import { addSetToExercise } from "../../actions";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
-type Props = {
+export function CardioSetForm({
+  workoutId,
+  workoutExerciseId,
+}: {
   workoutId: string;
   workoutExerciseId: string;
-};
-
-export function CardioSetForm({ workoutId, workoutExerciseId }: Props) {
+}) {
   return (
-    <form action={addSetToExercise} className="flex gap-3 items-center">
+    <form
+      action={addSetToExercise}
+      className="flex items-center gap-2 pt-2 border-t"
+    >
       <input type="hidden" name="workoutId" value={workoutId} />
       <input type="hidden" name="workoutExerciseId" value={workoutExerciseId} />
-
-      <input
+      <Input
         name="duration"
         type="number"
         placeholder="Duration (min)"
         required
+        className="w-36"
       />
-
-      <input name="distance" type="number" step="0.01" placeholder="Distance" />
-
-      <button type="submit">Add set</button>
+      <Input
+        name="distance"
+        type="number"
+        step="0.01"
+        placeholder="Distance"
+        className="w-28"
+      />
+      <Button type="submit" variant="secondary" className="ml-auto">
+        Add set
+      </Button>
     </form>
   );
 }

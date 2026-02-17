@@ -2,10 +2,15 @@
 
 import { Exercise } from "@/lib/types";
 import { addExerciseToWorkout } from "../../actions";
-import { Button } from "@/app/components/Button";
-import { FormSelect } from "@/app/components/FormSelect";
 import { useState } from "react";
-import { toFormSelectOptions } from "@/lib/utils/toFormSelectOptions";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export function AddExerciseForm({
   workoutId,
@@ -14,21 +19,33 @@ export function AddExerciseForm({
   workoutId: string;
   exercises: Exercise[];
 }) {
-  const options = toFormSelectOptions(exercises, "name", "id");
-  const initVal = options[0];
-  const [exercise, setExercise] = useState(initVal.id);
+  const [exercise, setExercise] = useState(exercises[0]?.id ?? null);
+
+  if (!exercise) {
+    return (
+      <p className="text-sm text-muted-foreground">No exercises available.</p>
+    );
+  }
 
   return (
     <form action={addExerciseToWorkout} className="flex items-end gap-3">
       <input type="hidden" name="workoutId" value={workoutId} />
+      <input type="hidden" name="exerciseId" value={exercise} />
 
-      <FormSelect
-        className="flex-1"
-        label="Exercises"
-        options={options}
-        value={exercise}
-        onChange={setExercise}
-      />
+      <div className="flex-1">
+        <Select value={exercise} onValueChange={setExercise}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select an exercise" />
+          </SelectTrigger>
+          <SelectContent>
+            {exercises.map((e) => (
+              <SelectItem key={e.id} value={e.id}>
+                {e.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
       <Button type="submit">Add</Button>
     </form>

@@ -1,4 +1,6 @@
 import { addSetToExercise } from "../../actions";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export function StrengthSetForm({
   workoutId,
@@ -8,40 +10,36 @@ export function StrengthSetForm({
   workoutExerciseId: string;
 }) {
   return (
-    <form action={addSetToExercise} className="mt-3 grid grid-cols-4 gap-2">
+    <form
+      action={addSetToExercise}
+      className="flex items-center gap-2 pt-2 border-t"
+    >
       <input type="hidden" name="workoutId" value={workoutId} />
       <input type="hidden" name="workoutExerciseId" value={workoutExerciseId} />
-
-      <input
+      <Input
         name="reps"
         type="number"
         placeholder="Reps"
         required
-        className="rounded-md border px-2 py-1 text-sm"
+        className="w-20"
       />
-
-      <input
+      <Input
         name="weight"
         type="number"
         step="0.5"
         placeholder="Weight"
-        className="rounded-md border px-2 py-1 text-sm"
+        className="w-24"
       />
-
-      <input
+      <Input
         name="rpe"
         type="number"
         step="0.5"
         placeholder="RPE"
-        className="rounded-md border px-2 py-1 text-sm"
+        className="w-20"
       />
-
-      <button
-        type="submit"
-        className="col-span-4 rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground"
-      >
+      <Button type="submit" variant="secondary" className="ml-auto">
         Add set
-      </button>
+      </Button>
     </form>
   );
 }

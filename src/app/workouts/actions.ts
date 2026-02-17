@@ -23,6 +23,7 @@ export async function createWorkout(params: {
 }
 
 export async function addExerciseToWorkout(formData: FormData): Promise<void> {
+  console.log(formData);
   const user = await getUser();
 
   const workoutId = formData.get("workoutId") as string;
@@ -244,4 +245,32 @@ export async function deleteExerciseFromWorkout(formData: FormData) {
   });
 
   redirect(`/workouts/${workoutId}`);
+}
+
+export async function deleteWorkout(formData: FormData) {
+  const user = await getUser();
+
+  const workoutId = formData.get("workoutId") as string;
+  if (!workoutId) return;
+
+  const workout = await prisma.workout.findFirst({
+    where: { id: workoutId, userId: user.id },
+    select: { id: true },
+  });
+
+  if (!workout) return;
+
+  await prisma.set.deleteMany({
+    where: { workoutExercise: { workoutId } },
+  });
+
+  await prisma.workoutExercise.deleteMany({
+    where: { workoutId },
+  });
+
+  await prisma.workout.delete({
+    where: { id: workoutId },
+  });
+
+  redirect("/workouts");
 }
