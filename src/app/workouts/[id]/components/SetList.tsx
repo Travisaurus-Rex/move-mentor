@@ -3,9 +3,9 @@
 import { useState } from "react";
 import type { Set } from "@/lib/types";
 import { deleteSet, updateSet } from "../../actions";
-import { ExerciseCategory } from "@prisma/client/enums";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { ExerciseCategory } from "@/generated/prisma/enums";
 
 type Props = {
   sets: Set[];
