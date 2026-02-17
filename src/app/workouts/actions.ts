@@ -11,7 +11,7 @@ export async function createWorkout(params: {
 }): Promise<string> {
   const user = await getUser();
 
-  let createdUser = await prisma.workout.create({
+  const createdUser = await prisma.workout.create({
     data: {
       date: new Date(params.date),
       notes: params.notes,
