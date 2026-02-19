@@ -79,14 +79,7 @@ export default function AboutPage() {
           backgroundPosition: "center",
         }}
       >
-        <div
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px)",
-            backgroundSize: "48px 48px",
-          }}
-        />
+        <div className="absolute inset-0 bg-black/20" />
 
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-zinc-950" />
 
@@ -106,7 +99,7 @@ export default function AboutPage() {
             <br />
             <span
               className="text-primary"
-              style={{ textShadow: "0 2px 12px rgba(0,0,0,0.8)" }}
+              style={{ textShadow: "0 2px 12px rgba(0,0,0,1)" }}
             >
               intention.
             </span>
