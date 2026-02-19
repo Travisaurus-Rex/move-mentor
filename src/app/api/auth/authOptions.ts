@@ -21,4 +21,13 @@ export const authOptions: NextAuthOptions = {
       return baseUrl;
     },
   },
+  events: {
+    async signIn({ user }) {
+      await prisma.userProfile.upsert({
+        where: { userId: user.id },
+        update: {},
+        create: { userId: user.id },
+      });
+    },
+  },
 };
