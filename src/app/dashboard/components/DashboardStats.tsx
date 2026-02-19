@@ -25,8 +25,8 @@ import { Period } from "@/lib/types";
 type DataPoint = { week: string; count: number };
 
 const colorMap = {
-  blue: "bg-blue-500 text-white",
-  rose: "bg-rose-500 text-white",
+  blue: "bg-emerald-500 text-white",
+  rose: "bg-purple-500 text-white",
 };
 
 function StatCard({
@@ -125,14 +125,14 @@ export function DashboardStats({
           label="Total Volume"
           value={`${(volume / 1000).toFixed(1)}k kg`}
           subtitle={`${strengthCount} strength exercises`}
-          icon={<Dumbbell className="h-25 w-25" />}
+          icon={<Dumbbell className="h-15 w-15" />}
           color="blue"
         />
         <StatCard
           label="Cardio Minutes"
           value={`${cardioMinutes} min`}
           subtitle={`${cardioCount} cardio exercises`}
-          icon={<Timer className="h-25 w-25" />}
+          icon={<Timer className="h-15 w-15" />}
           color="rose"
         />
       </div>
