@@ -8,7 +8,6 @@ import {
 } from "@/lib/queries/workouts";
 import { DashboardStats } from "./components/DashboardStats";
 import { getUserWithProfile } from "@/lib/queries/user-profile";
-import { UnitSystem } from "@prisma/client";
 
 export default async function DashboardPage() {
   const { id: userId, profile } = await getUserWithProfile();

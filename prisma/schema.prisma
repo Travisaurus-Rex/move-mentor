@@ -52,6 +52,7 @@ model User {
 model UserProfile {
   id         String     @id @default(cuid())
   userId     String     @unique
+  displayName String?
   unitSystem UnitSystem @default(METRIC)
 
   user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
