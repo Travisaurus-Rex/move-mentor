@@ -30,7 +30,7 @@ export function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
                 asChild
                 className={navigationMenuTriggerStyle()}
               >
-                <Link href="/about">About</Link>
+                <Link href="/api/auth/signin">Login</Link>
               </NavigationMenuLink>
             </NavigationMenuItem>
           )}
