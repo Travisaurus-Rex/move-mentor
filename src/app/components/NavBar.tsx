@@ -10,7 +10,7 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 export function NavBar({ isLoggedIn }: { isLoggedIn: boolean }) {
   return (
