@@ -24,6 +24,11 @@ enum ExerciseCategory {
   MOBILITY
 }
 
+enum WeightUnit {
+  KG
+  LBS
+}
+
 // --------------------
 // Models
 // --------------------
@@ -34,6 +39,7 @@ model User {
   emailVerified DateTime? 
   name          String?
   image         String?
+  profile       UserProfile?
 
   accounts      Account[]
   sessions      Session[]
@@ -41,6 +47,17 @@ model User {
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+}
+
+model UserProfile {
+  id         String     @id @default(cuid())
+  userId     String     @unique
+  weightUnit WeightUnit @default(KG)
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 model Account {
