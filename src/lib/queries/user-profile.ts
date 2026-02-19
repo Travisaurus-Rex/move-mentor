@@ -17,6 +17,14 @@ export async function getUserUnitSystem(userId: string): Promise<UnitSystem> {
   return UnitSystem[profile?.unitSystem || UnitSystem.METRIC];
 }
 
+export async function getUserProfile(
+  userId: string,
+): Promise<UserProfile | null> {
+  return prisma.userProfile.findUnique({
+    where: { userId },
+  });
+}
+
 export async function getUserWithProfile(): Promise<UserWithProfile> {
   const session = await getSession();
   if (!session?.user?.email) throw new Error("Not authenticated");

@@ -16,7 +16,7 @@ export default async function AuthenticatedLayout({
 
   return (
     <div className="flex min-h-screen bg-background">
-      <Sidebar user={session.user} />
+      <Sidebar />
       <main className="flex-1 ml-64 p-8">{children}</main>
     </div>
   );
