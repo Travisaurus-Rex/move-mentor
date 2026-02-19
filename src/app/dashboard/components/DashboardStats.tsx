@@ -21,12 +21,19 @@ import {
 import { Dumbbell, Timer } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Period } from "@/lib/types";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
 
 type DataPoint = { week: string; count: number };
 
 const colorMap = {
-  blue: "bg-emerald-500 text-white",
-  rose: "bg-purple-500 text-white",
+  blue: "bg-blue-500 text-white",
+  rose: "bg-rose-500 text-white",
+  emerald: "bg-emerald-500 text-white",
+  purple: "bg-purple-500 text-white",
 };
 
 function StatCard({
@@ -46,7 +53,7 @@ function StatCard({
     <Card className={cn("relative overflow-hidden shadow-md", colorMap[color])}>
       <CardContent className="p-8">
         <div className="flex justify-between">
-          <p className="text-2xl font-medium opacity-70 uppercase tracking-widest">
+          <p className="text-lg sm:text-2xl font-medium opacity-70 uppercase tracking-widest">
             {label}
           </p>
           <div className="opacity-80">{icon}</div>
@@ -68,6 +75,7 @@ type Props = {
   initialChartData: DataPoint[];
   strengthCount: number;
   cardioCount: number;
+  totalUserWorkouts: number;
 };
 
 export function DashboardStats({
@@ -76,6 +84,7 @@ export function DashboardStats({
   initialChartData,
   strengthCount,
   cardioCount,
+  totalUserWorkouts,
 }: Props) {
   const [period, setPeriod] = useState<Period>("1W");
   const [volume, setVolume] = useState(initialVolume);
@@ -115,26 +124,45 @@ export function DashboardStats({
         </Select>
       </div>
 
-      <div
-        className={cn(
-          "grid grid-cols-2 gap-4 transition-opacity duration-200",
-          loading && "opacity-50",
-        )}
-      >
-        <StatCard
-          label="Total Volume"
-          value={`${(volume / 1000).toFixed(1)}k kg`}
-          subtitle={`${strengthCount} strength exercises`}
-          icon={<Dumbbell className="h-15 w-15" />}
-          color="blue"
-        />
-        <StatCard
-          label="Cardio Minutes"
-          value={`${cardioMinutes} min`}
-          subtitle={`${cardioCount} cardio exercises`}
-          icon={<Timer className="h-15 w-15" />}
-          color="rose"
-        />
+      <div className="relative rounded-xl overflow-hidden">
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-black/15 to-transparent" />
+        <Carousel
+          className={cn(
+            "transition-opacity duration-200",
+            loading && "opacity-50",
+          )}
+        >
+          <CarouselContent>
+            <CarouselItem className="basis-4/5 md:basis-[45%] lg:basis-[40%] select-none">
+              <StatCard
+                label="Total Volume"
+                value={`${(volume / 1000).toFixed(1)}k kg`}
+                subtitle={`${strengthCount} strength exercises`}
+                icon={<Dumbbell className="h-15 w-15" />}
+                color="blue"
+              />
+            </CarouselItem>
+            <CarouselItem className="basis-4/5 md:basis-[45%] lg:basis-[40%] select-none">
+              <StatCard
+                label="Cardio Minutes"
+                value={`${cardioMinutes} min`}
+                subtitle={`${cardioCount} cardio exercises`}
+                icon={<Timer className="h-15 w-15" />}
+                color="rose"
+              />
+            </CarouselItem>
+            <CarouselItem className="basis-4/5 md:basis-[45%] lg:basis-[40%] select-none">
+              <StatCard
+                label="Total Workouts"
+                value={totalUserWorkouts.toString() || ""}
+                subtitle={`workouts completed`}
+                icon={<Timer className="h-15 w-15" />}
+                color="emerald"
+              />
+            </CarouselItem>
+          </CarouselContent>
+        </Carousel>
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-black/15 to-transparent" />
       </div>
 
       <Card

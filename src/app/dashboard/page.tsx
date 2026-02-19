@@ -4,18 +4,26 @@ import {
   getWorkoutsPerWeek,
   getStrengthExercisesCount,
   getCardioExercisesCount,
+  getUserWorkoutsCount,
 } from "@/lib/queries/workouts";
 import { DashboardStats } from "./components/DashboardStats";
 
 export default async function DashboardPage() {
-  const [volume, cardioMinutes, chartData, strengthCount, cardioCount] =
-    await Promise.all([
-      getTotalVolume("1W"),
-      getTotalCardioMinutes("1W"),
-      getWorkoutsPerWeek("1W"),
-      getStrengthExercisesCount(),
-      getCardioExercisesCount(),
-    ]);
+  const [
+    volume,
+    cardioMinutes,
+    chartData,
+    strengthCount,
+    cardioCount,
+    totalUserWorkouts,
+  ] = await Promise.all([
+    getTotalVolume("1W"),
+    getTotalCardioMinutes("1W"),
+    getWorkoutsPerWeek("1W"),
+    getStrengthExercisesCount(),
+    getCardioExercisesCount(),
+    getUserWorkoutsCount(),
+  ]);
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-10">
@@ -25,6 +33,7 @@ export default async function DashboardPage() {
         initialChartData={chartData}
         strengthCount={strengthCount}
         cardioCount={cardioCount}
+        totalUserWorkouts={totalUserWorkouts}
       />
     </div>
   );
