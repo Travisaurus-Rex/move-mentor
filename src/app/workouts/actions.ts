@@ -4,6 +4,8 @@ import { ExerciseCategory } from "@prisma/client";
 import { getUser } from "@/lib/auth/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import { toKg, toKm } from "@/lib/utils";
+import { getUserUnitSystem } from "@/lib/queries/user-profile";
 
 export async function createWorkout(params: {
   date: string;
@@ -23,7 +25,6 @@ export async function createWorkout(params: {
 }
 
 export async function addExerciseToWorkout(formData: FormData): Promise<void> {
-  console.log(formData);
   const user = await getUser();
 
   const workoutId = formData.get("workoutId") as string;
@@ -61,17 +62,20 @@ export async function addSetToExercise(formData: FormData) {
 
   if (!workoutId || !workoutExerciseId) return;
 
-  const workoutExercise = await prisma.workoutExercise.findFirst({
-    where: {
-      id: workoutExerciseId,
-      workout: { userId: user.id },
-    },
-    include: {
-      exercise: {
-        select: { category: true },
+  const [workoutExercise, unitSystem] = await Promise.all([
+    prisma.workoutExercise.findFirst({
+      where: {
+        id: workoutExerciseId,
+        workout: { userId: user.id },
       },
-    },
-  });
+      include: {
+        exercise: {
+          select: { category: true },
+        },
+      },
+    }),
+    getUserUnitSystem(user.id),
+  ]);
 
   if (!workoutExercise) return;
 
@@ -92,7 +96,7 @@ export async function addSetToExercise(formData: FormData) {
       data: {
         workoutExerciseId,
         reps,
-        weight: weightRaw ? Number(weightRaw) : null,
+        weight: weightRaw ? toKg(Number(weightRaw), unitSystem) : null,
         rpe: rpeRaw ? Number(rpeRaw) : null,
         notes: notesRaw ? String(notesRaw) : null,
       },
@@ -113,7 +117,7 @@ export async function addSetToExercise(formData: FormData) {
       data: {
         workoutExerciseId,
         duration,
-        distance: distanceRaw ? Number(distanceRaw) : null,
+        distance: distanceRaw ? toKm(Number(distanceRaw), unitSystem) : null,
         notes: notesRaw ? String(notesRaw) : null,
       },
     });
@@ -129,21 +133,24 @@ export async function updateSet(formData: FormData) {
   const workoutId = formData.get("workoutId") as string | null;
   if (!setId || !workoutId) return;
 
-  const set = await prisma.set.findFirst({
-    where: {
-      id: setId,
-      workoutExercise: {
-        workout: { userId: user.id },
-      },
-    },
-    include: {
-      workoutExercise: {
-        include: {
-          exercise: { select: { category: true } },
+  const [set, unitSystem] = await Promise.all([
+    prisma.set.findFirst({
+      where: {
+        id: setId,
+        workoutExercise: {
+          workout: { userId: user.id },
         },
       },
-    },
-  });
+      include: {
+        workoutExercise: {
+          include: {
+            exercise: { select: { category: true } },
+          },
+        },
+      },
+    }),
+    getUserUnitSystem(user.id),
+  ]);
 
   if (!set) return;
 
@@ -159,7 +166,7 @@ export async function updateSet(formData: FormData) {
       where: { id: setId },
       data: {
         reps: reps ? Number(reps) : null,
-        weight: weight ? Number(weight) : null,
+        weight: weight ? toKg(Number(weight), unitSystem) : null,
         rpe: rpe ? Number(rpe) : null,
         notes: notes ? String(notes) : null,
         duration: null,
@@ -179,7 +186,7 @@ export async function updateSet(formData: FormData) {
       where: { id: setId },
       data: {
         duration: Number(duration),
-        distance: distance ? Number(distance) : null,
+        distance: distance ? toKm(Number(distance), unitSystem) : null,
         notes: notes ? String(notes) : null,
         reps: null,
         weight: null,

@@ -7,6 +7,8 @@ import {
   WorkoutWithExercisesAndSets,
 } from "@/lib/types";
 import { notFound } from "next/navigation";
+import { fromKg, fromKm } from "../utils";
+import { UnitSystem } from "@prisma/client";
 
 function periodToDate(period: Period): Date | null {
   if (period === "ALL") return null;
@@ -25,11 +27,11 @@ function periodToDate(period: Period): Date | null {
 
 export async function getWorkoutById(
   id: string,
+  userId: string,
+  unitSystem: UnitSystem,
 ): Promise<WorkoutWithExercisesAndSets> {
-  const user = await getUser();
-
   const workout = await prisma.workout.findFirst({
-    where: { id, userId: user.id },
+    where: { id, userId },
     include: {
       exercises: {
         orderBy: { order: "asc" },
@@ -44,45 +46,53 @@ export async function getWorkoutById(
   });
 
   if (!workout) notFound();
-  return workout;
+
+  return {
+    ...workout,
+    exercises: workout.exercises.map((we) => ({
+      ...we,
+      sets: we.sets.map((set) => ({
+        ...set,
+        weight: set.weight !== null ? fromKg(set.weight, unitSystem) : null,
+        distance:
+          set.distance !== null ? fromKm(set.distance, unitSystem) : null,
+      })),
+    })),
+  };
 }
 
-export async function getUserWorkouts(): Promise<Workout[]> {
-  const user = await getUser();
-
+export async function getUserWorkouts(userId: string): Promise<Workout[]> {
   return prisma.workout.findMany({
-    where: { userId: user.id },
+    where: { userId },
     orderBy: { date: "desc" },
   });
 }
 
-export async function getUserWorkoutsCount(): Promise<number> {
-  const { id } = await getUser();
-  return prisma.workout.count({ where: { userId: id } });
+export async function getUserWorkoutsCount(userId: string): Promise<number> {
+  return prisma.workout.count({ where: { userId } });
 }
 
-export async function getUserExercisesCount(): Promise<number> {
-  const { id } = await getUser();
+export async function getUserExercisesCount(userId: string): Promise<number> {
   return prisma.workoutExercise.count({
-    where: { workout: { userId: id } },
+    where: { workout: { userId } },
   });
 }
 
-export async function getStrengthExercisesCount(): Promise<number> {
-  const { id } = await getUser();
+export async function getStrengthExercisesCount(
+  userId: string,
+): Promise<number> {
   return prisma.workoutExercise.count({
     where: {
-      workout: { userId: id },
+      workout: { userId },
       exercise: { category: "STRENGTH" },
     },
   });
 }
 
-export async function getCardioExercisesCount(): Promise<number> {
-  const { id } = await getUser();
+export async function getCardioExercisesCount(userId: string): Promise<number> {
   return prisma.workoutExercise.count({
     where: {
-      workout: { userId: id },
+      workout: { userId },
       exercise: { category: "CARDIO" },
     },
   });
@@ -92,15 +102,18 @@ export async function getAllExercises(): Promise<Exercise[]> {
   return prisma.exercise.findMany({ orderBy: { name: "asc" } });
 }
 
-export async function getTotalVolume(period: Period = "ALL"): Promise<number> {
-  const { id } = await getUser();
+export async function getTotalVolume(
+  period: Period = "ALL",
+  userId: string,
+  unitSystem: UnitSystem,
+): Promise<number> {
   const since = periodToDate(period);
 
   const sets = await prisma.set.findMany({
     where: {
       workoutExercise: {
         workout: {
-          userId: id,
+          userId,
           ...(since ? { date: { gte: since } } : {}),
         },
       },
@@ -110,20 +123,21 @@ export async function getTotalVolume(period: Period = "ALL"): Promise<number> {
     select: { reps: true, weight: true },
   });
 
-  return sets.reduce((acc, set) => acc + set.reps! * set.weight!, 0);
+  const totalKg = sets.reduce((acc, set) => acc + set.reps! * set.weight!, 0);
+  return fromKg(totalKg, unitSystem);
 }
 
 export async function getTotalCardioMinutes(
   period: Period = "ALL",
+  userId: string,
 ): Promise<number> {
-  const { id } = await getUser();
   const since = periodToDate(period);
 
   const sets = await prisma.set.findMany({
     where: {
       workoutExercise: {
         workout: {
-          userId: id,
+          userId,
           ...(since ? { date: { gte: since } } : {}),
         },
       },
@@ -137,16 +151,15 @@ export async function getTotalCardioMinutes(
 
 export async function getWorkoutsPerWeek(
   period: Period,
+  userId: string,
 ): Promise<{ week: string; count: number }[]> {
-  const { id } = await getUser();
-
   const since =
     period === "ALL"
       ? new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)
       : periodToDate(period)!;
 
   const workouts = await prisma.workout.findMany({
-    where: { userId: id, date: { gte: since } },
+    where: { userId, date: { gte: since } },
     select: { date: true },
     orderBy: { date: "asc" },
   });
@@ -168,23 +181,21 @@ export async function getWorkoutsPerWeek(
   return Object.entries(weeks).map(([week, count]) => ({ week, count }));
 }
 
-export async function getDashboardStats() {
-  const user = await getUser();
-
+export async function getDashboardStats(userId: string) {
   const [workoutCount, exerciseCount, lastWorkout, recentWorkoutCount] =
     await Promise.all([
-      prisma.workout.count({ where: { userId: user.id } }),
+      prisma.workout.count({ where: { userId } }),
       prisma.workoutExercise.count({
-        where: { workout: { userId: user.id } },
+        where: { workout: { userId } },
       }),
       prisma.workout.findFirst({
-        where: { userId: user.id },
+        where: { userId },
         orderBy: { date: "desc" },
         select: { date: true },
       }),
       prisma.workout.count({
         where: {
-          userId: user.id,
+          userId,
           date: { gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) },
         },
       }),
@@ -198,11 +209,12 @@ export async function getDashboardStats() {
   };
 }
 
-export async function getUserWorkoutsWithStats() {
-  const { id } = await getUser();
-
+export async function getUserWorkoutsWithStats(
+  userId: string,
+  unitSystem: UnitSystem,
+) {
   const workouts = await prisma.workout.findMany({
-    where: { userId: id },
+    where: { userId },
     orderBy: { date: "desc" },
     include: {
       exercises: {
@@ -220,12 +232,13 @@ export async function getUserWorkoutsWithStats() {
       (acc, we) => acc + we.sets.length,
       0,
     );
-    const totalVolume = workout.exercises.reduce(
+    const totalVolumeKg = workout.exercises.reduce(
       (acc, we) =>
         acc +
         we.sets.reduce((s, set) => s + (set.reps ?? 0) * (set.weight ?? 0), 0),
       0,
     );
+    const totalVolume = fromKg(totalVolumeKg, unitSystem);
     const totalCardioMinutes = workout.exercises.reduce(
       (acc, we) => acc + we.sets.reduce((s, set) => s + (set.duration ?? 0), 0),
       0,

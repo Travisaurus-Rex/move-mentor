@@ -1,3 +1,4 @@
+import { getUserWithProfile } from "@/lib/queries/user-profile";
 import {
   getTotalCardioMinutes,
   getTotalVolume,
@@ -8,11 +9,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   const period = (req.nextUrl.searchParams.get("period") ?? "1W") as Period;
+  const { id: userId, profile } = await getUserWithProfile();
 
   const [volume, cardioMinutes, chartData] = await Promise.all([
-    getTotalVolume(period),
-    getTotalCardioMinutes(period),
-    getWorkoutsPerWeek(period),
+    getTotalVolume(period, userId, profile.unitSystem),
+    getTotalCardioMinutes(period, userId),
+    getWorkoutsPerWeek(period, userId),
   ]);
 
   return NextResponse.json({ volume, cardioMinutes, chartData });

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { NavBar } from "./components/NavBar";
-import { isAuthenticated } from "@/lib/auth/auth";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/authOptions";
 

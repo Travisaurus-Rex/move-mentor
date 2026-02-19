@@ -26,6 +26,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import { UnitSystem } from "@prisma/client";
 
 type DataPoint = { week: string; count: number };
 
@@ -70,6 +71,7 @@ function StatCard({
 }
 
 type Props = {
+  unitSystem: UnitSystem;
   initialVolume: number;
   initialCardioMinutes: number;
   initialChartData: DataPoint[];
@@ -79,6 +81,7 @@ type Props = {
 };
 
 export function DashboardStats({
+  unitSystem,
   initialVolume,
   initialCardioMinutes,
   initialChartData,
@@ -136,7 +139,7 @@ export function DashboardStats({
             <CarouselItem className="basis-4/5 md:basis-[45%] lg:basis-[40%] select-none">
               <StatCard
                 label="Total Volume"
-                value={`${(volume / 1000).toFixed(1)}k kg`}
+                value={`${(volume / 1000).toFixed(1)}k ${unitSystem === UnitSystem.IMPERIAL ? "lbs" : "kg"}`}
                 subtitle={`${strengthCount} strength exercises`}
                 icon={<Dumbbell className="h-15 w-15" />}
                 color="blue"

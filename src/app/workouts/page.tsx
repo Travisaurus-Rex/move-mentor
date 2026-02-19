@@ -12,9 +12,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2 } from "lucide-react";
 import { deleteWorkout } from "./actions";
+import { getUserWithProfile } from "@/lib/queries/user-profile";
 
 export default async function WorkoutsPage() {
-  const workouts = await getUserWorkoutsWithStats();
+  const { id: userId, profile } = await getUserWithProfile();
+  const workouts = await getUserWorkoutsWithStats(userId, profile.unitSystem);
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-10 space-y-6">

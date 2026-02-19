@@ -7,8 +7,11 @@ import {
   getUserWorkoutsCount,
 } from "@/lib/queries/workouts";
 import { DashboardStats } from "./components/DashboardStats";
+import { getUserWithProfile } from "@/lib/queries/user-profile";
+import { UnitSystem } from "@prisma/client";
 
 export default async function DashboardPage() {
+  const { id: userId, profile } = await getUserWithProfile();
   const [
     volume,
     cardioMinutes,
@@ -17,17 +20,18 @@ export default async function DashboardPage() {
     cardioCount,
     totalUserWorkouts,
   ] = await Promise.all([
-    getTotalVolume("1W"),
-    getTotalCardioMinutes("1W"),
-    getWorkoutsPerWeek("1W"),
-    getStrengthExercisesCount(),
-    getCardioExercisesCount(),
-    getUserWorkoutsCount(),
+    getTotalVolume("1W", userId, profile.unitSystem),
+    getTotalCardioMinutes("1W", userId),
+    getWorkoutsPerWeek("1W", userId),
+    getStrengthExercisesCount(userId),
+    getCardioExercisesCount(userId),
+    getUserWorkoutsCount(userId),
   ]);
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-10">
       <DashboardStats
+        unitSystem={profile.unitSystem}
         initialVolume={volume}
         initialCardioMinutes={cardioMinutes}
         initialChartData={chartData}
