@@ -70,7 +70,7 @@ function StatPill({ value, label }: { value: string; label: string }) {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen">
+    <div>
       <section
         className="relative flex min-h-screen items-center justify-center overflow-hidden bg-zinc-950"
         style={{
