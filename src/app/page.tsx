@@ -215,7 +215,7 @@ export default function HomePage() {
             </div>
           </RevealCard>
 
-          <div className="grid gap-6 sm:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-3 items-stretch">
             {[
               {
                 step: "01",
@@ -234,7 +234,7 @@ export default function HomePage() {
               },
             ].map(({ step, title, body }, i) => (
               <RevealCard key={step} delay={i * 100}>
-                <div className="rounded-2xl border bg-card p-8">
+                <div className="rounded-2xl border bg-card p-8 h-full">
                   <p className="mb-4 text-5xl font-bold tracking-tighter text-muted-foreground/30">
                     {step}
                   </p>
