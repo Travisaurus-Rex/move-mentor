@@ -5,30 +5,42 @@ import { prisma } from "@/lib/prisma";
 import { UnitSystem } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
-export async function updateUserProfile(formData: FormData) {
-  const user = await getUser();
+export async function updateUserProfile(
+  previousState: unknown,
+  formData: FormData,
+) {
+  try {
+    const user = await getUser();
 
-  const displayName = formData.get("displayName") as string | null;
-  const unitSystem = formData.get("unitSystem") as UnitSystem | null;
+    const displayName = formData.get("displayName") as string | null;
+    const unitSystem = formData.get("unitSystem") as UnitSystem | null;
 
-  if (unitSystem && !Object.values(UnitSystem).includes(unitSystem)) {
-    throw new Error("Invalid unit system");
+    if (unitSystem && !Object.values(UnitSystem).includes(unitSystem)) {
+      throw new Error("Invalid unit system");
+    }
+
+    await prisma.userProfile.upsert({
+      where: { userId: user.id },
+      update: {
+        ...(displayName !== null && { displayName }),
+        ...(unitSystem !== null && { unitSystem }),
+      },
+      create: {
+        userId: user.id,
+        displayName: displayName ?? null,
+        unitSystem: unitSystem ?? UnitSystem.METRIC,
+      },
+    });
+
+    revalidatePath("/settings");
+    return { success: true, error: null };
+  } catch (err) {
+    console.error(err); // analytics?
+    return {
+      success: false,
+      error: "Failed to update profile. Please try again.",
+    };
   }
-
-  await prisma.userProfile.upsert({
-    where: { userId: user.id },
-    update: {
-      ...(displayName !== null && { displayName }),
-      ...(unitSystem !== null && { unitSystem }),
-    },
-    create: {
-      userId: user.id,
-      displayName: displayName ?? null,
-      unitSystem: unitSystem ?? UnitSystem.METRIC,
-    },
-  });
-
-  revalidatePath("/settings");
 }
 
 export async function deleteAccount() {
