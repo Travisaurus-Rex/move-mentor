@@ -139,7 +139,7 @@ export function DashboardStats({
             <CarouselItem className="basis-4/5 md:basis-[45%] lg:basis-[40%] select-none">
               <StatCard
                 label="Total Volume"
-                value={`${(volume / 1000).toFixed(1)}k ${unitSystem === UnitSystem.IMPERIAL ? "lbs" : "kg"}`}
+                value={`${(volume / 1000).toFixed(1)} ${unitSystem === UnitSystem.IMPERIAL ? "lbs" : "kg"}`}
                 subtitle={`${strengthCount} strength exercises`}
                 icon={<Dumbbell className="h-15 w-15" />}
                 color="blue"
