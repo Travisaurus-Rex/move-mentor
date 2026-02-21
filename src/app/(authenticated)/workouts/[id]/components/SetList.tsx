@@ -5,7 +5,8 @@ import type { Set } from "@/lib/types";
 import { deleteSet, updateSet } from "../../actions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ExerciseCategory } from "@prisma/client";
+import { ExerciseCategory, UnitSystem } from "@prisma/client";
+import { useUserPreferences } from "@/lib/context/UserPreferencesContext";
 
 type Props = {
   sets: Set[];
@@ -14,6 +15,7 @@ type Props = {
 };
 
 export function SetList({ sets, workoutId, category }: Props) {
+  const { weightUnit, distanceUnit } = useUserPreferences();
   const [editingSetId, setEditingSetId] = useState<string | null>(null);
 
   if (sets.length === 0) {
@@ -35,8 +37,9 @@ export function SetList({ sets, workoutId, category }: Props) {
                 <span className="flex-1">
                   {category === "STRENGTH" && (
                     <>
-                      <span className="font-medium">{set.weight ?? "—"}</span>
-                      {" kg × "}
+                      <span className="font-medium">
+                        {`${set.weight?.toFixed(1)} ${weightUnit}`}
+                      </span>{" "}
                       <span className="font-medium">{set.reps ?? "—"}</span>
                       {" reps"}
                       {set.rpe ? (
@@ -52,7 +55,7 @@ export function SetList({ sets, workoutId, category }: Props) {
                       {" min"}
                       {set.distance ? (
                         <span className="ml-2 text-muted-foreground">
-                          • {set.distance} km
+                          • {`${set.distance.toFixed(1)} ${distanceUnit}`}
                         </span>
                       ) : null}
                     </>
