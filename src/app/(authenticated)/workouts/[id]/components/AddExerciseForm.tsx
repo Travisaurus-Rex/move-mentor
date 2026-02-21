@@ -1,6 +1,7 @@
 "use client";
 
 import { Exercise } from "@/lib/types";
+import { ExerciseCategory } from "@prisma/client";
 import { addExerciseToWorkout } from "../../actions";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -19,35 +20,58 @@ export function AddExerciseForm({
   workoutId: string;
   exercises: Exercise[];
 }) {
-  const [exercise, setExercise] = useState(exercises[0]?.id ?? null);
+  const [category, setCategory] = useState<ExerciseCategory | null>(null);
+  const [exercise, setExercise] = useState<string | null>(null);
 
-  if (!exercise) {
-    return (
-      <p className="text-sm text-muted-foreground">No exercises available.</p>
-    );
-  }
+  const filteredExercises = category
+    ? exercises.filter((e) => e.category === category)
+    : [];
 
   return (
     <form action={addExerciseToWorkout} className="flex items-end gap-3">
       <input type="hidden" name="workoutId" value={workoutId} />
-      <input type="hidden" name="exerciseId" value={exercise} />
+      <input type="hidden" name="exerciseId" value={exercise ?? ""} />
 
-      <div className="flex-1">
-        <Select value={exercise} onValueChange={setExercise}>
-          <SelectTrigger>
-            <SelectValue placeholder="Select an exercise" />
-          </SelectTrigger>
-          <SelectContent>
-            {exercises.map((e) => (
-              <SelectItem key={e.id} value={e.id}>
-                {e.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      <Select
+        value={category ?? ""}
+        onValueChange={(val) => {
+          setCategory(val as ExerciseCategory);
+          setExercise(null);
+        }}
+      >
+        <SelectTrigger className="flex-1">
+          <SelectValue placeholder="Category" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value={ExerciseCategory.STRENGTH}>Strength</SelectItem>
+          <SelectItem value={ExerciseCategory.CARDIO}>Cardio</SelectItem>
+          <SelectItem value={ExerciseCategory.BODYWEIGHT}>
+            Bodyweight
+          </SelectItem>
+          <SelectItem value={ExerciseCategory.MOBILITY}>Mobility</SelectItem>
+        </SelectContent>
+      </Select>
 
-      <Button type="submit">Add</Button>
+      <Select
+        value={exercise ?? ""}
+        onValueChange={setExercise}
+        disabled={!category}
+      >
+        <SelectTrigger className="flex-1">
+          <SelectValue placeholder="Select exercise" />
+        </SelectTrigger>
+        <SelectContent position="popper" className="max-h-80">
+          {filteredExercises.map((e) => (
+            <SelectItem key={e.id} value={e.id}>
+              {e.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      <Button type="submit" disabled={!exercise} className="flex-1">
+        Add
+      </Button>
     </form>
   );
 }

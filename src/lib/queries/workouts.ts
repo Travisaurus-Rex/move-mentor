@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { getUser } from "../auth/auth";
 import {
   Exercise,
   Period,
