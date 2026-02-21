@@ -8,6 +8,15 @@ import {
 import { notFound } from "next/navigation";
 import { fromKg, fromKm } from "../utils";
 import { UnitSystem } from "@prisma/client";
+import { getUser } from "../auth/auth";
+
+function getWeekLabel(date: Date): string {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+  const monday = new Date(d.setDate(diff));
+  return monday.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
 
 function periodToDate(period: Period): Date | null {
   if (period === "ALL") return null;
@@ -15,12 +24,12 @@ function periodToDate(period: Period): Date | null {
     period === "1W"
       ? 7
       : period === "2W"
-        ? 14
+        ? 7 * 2
         : period === "1M"
-          ? 30
+          ? 7 * 4
           : period === "3M"
-            ? 90
-            : 180;
+            ? 7 * 12
+            : 7 * 36;
   return new Date(Date.now() - days * 24 * 60 * 60 * 1000);
 }
 
@@ -148,36 +157,75 @@ export async function getTotalCardioMinutes(
   return sets.reduce((acc, set) => acc + set.duration!, 0);
 }
 
-export async function getWorkoutsPerWeek(
+export async function getExercisesPerPeriod(
   period: Period,
   userId: string,
-): Promise<{ week: string; count: number }[]> {
+): Promise<{ label: string; count: number }[]> {
   const since =
     period === "ALL"
       ? new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)
       : periodToDate(period)!;
+  console.log("since", since);
 
   const workouts = await prisma.workout.findMany({
     where: { userId, date: { gte: since } },
-    select: { date: true },
+    select: {
+      date: true,
+      exercises: {
+        include: {
+          exercise: { select: { id: true } },
+        },
+      },
+    },
     orderBy: { date: "asc" },
   });
 
-  const weeks: Record<string, number> = {};
+  const useDaily = period === "1W" || period === "2W";
+  const periodData: Map<string, { date: Date; exercises: Set<string> }> =
+    new Map();
 
-  for (const workout of workouts) {
-    const d = new Date(workout.date);
-    const day = d.getDay();
-    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-    const monday = new Date(d.setDate(diff));
-    const label = monday.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-    });
-    weeks[label] = (weeks[label] ?? 0) + 1;
+  // Fill in all days/weeks in range
+  const now = new Date();
+  now.setHours(23, 59, 59, 999); // End of today
+  let current = new Date(since);
+  current.setHours(0, 0, 0, 0); // Start of first day
+
+  while (current <= now) {
+    const label = useDaily
+      ? current.toLocaleDateString("en-US", { month: "short", day: "numeric" })
+      : getWeekLabel(current);
+
+    if (!periodData.has(label)) {
+      periodData.set(label, { date: new Date(current), exercises: new Set() });
+    }
+
+    // Increment by day or week
+    current.setDate(current.getDate() + (useDaily ? 1 : 7));
   }
 
-  return Object.entries(weeks).map(([week, count]) => ({ week, count }));
+  // Add actual workout data
+  for (const workout of workouts) {
+    const label = useDaily
+      ? workout.date.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        })
+      : getWeekLabel(workout.date);
+
+    const existing = periodData.get(label);
+    if (existing) {
+      for (const we of workout.exercises) {
+        existing.exercises.add(we.exercise.id);
+      }
+    }
+  }
+
+  return Array.from(periodData.entries())
+    .sort(([, a], [, b]) => a.date.getTime() - b.date.getTime())
+    .map(([label, data]) => ({
+      label,
+      count: data.exercises.size,
+    }));
 }
 
 export async function getDashboardStats(userId: string) {

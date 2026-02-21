@@ -2,7 +2,7 @@ import { getUserWithProfile } from "@/lib/queries/user-profile";
 import {
   getTotalCardioMinutes,
   getTotalVolume,
-  getWorkoutsPerWeek,
+  getExercisesPerPeriod,
 } from "@/lib/queries/workouts";
 import { Period } from "@/lib/types";
 import { NextRequest, NextResponse } from "next/server";
@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
   const [volume, cardioMinutes, chartData] = await Promise.all([
     getTotalVolume(period, userId, profile.unitSystem),
     getTotalCardioMinutes(period, userId),
-    getWorkoutsPerWeek(period, userId),
+    getExercisesPerPeriod(period, userId),
   ]);
 
   return NextResponse.json({ volume, cardioMinutes, chartData });

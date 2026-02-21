@@ -1,4 +1,4 @@
-import { addSetToExercise } from "../../actions";
+import { addCardioSet } from "../../actions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -11,7 +11,7 @@ export function CardioSetForm({
 }) {
   return (
     <form
-      action={addSetToExercise}
+      action={addCardioSet}
       className="flex items-center gap-2 pt-2 border-t"
     >
       <input type="hidden" name="workoutId" value={workoutId} />

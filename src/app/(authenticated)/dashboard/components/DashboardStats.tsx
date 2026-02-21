@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/carousel";
 import { useUserPreferences } from "@/lib/context/UserPreferencesContext";
 
-type DataPoint = { week: string; count: number };
+type DataPoint = { label: string; count: number };
 
 const colorMap = {
   blue: "bg-blue-500 text-white",
@@ -193,7 +193,7 @@ export function DashboardStats({
                   stroke="rgba(0,0,0,0.06)"
                 />
                 <XAxis
-                  dataKey="week"
+                  dataKey="label"
                   tick={{ fontSize: 12 }}
                   axisLine={false}
                   tickLine={false}

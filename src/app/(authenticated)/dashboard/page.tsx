@@ -1,7 +1,7 @@
 import {
   getTotalCardioMinutes,
   getTotalVolume,
-  getWorkoutsPerWeek,
+  getExercisesPerPeriod,
   getStrengthExercisesCount,
   getCardioExercisesCount,
   getUserWorkoutsCount,
@@ -21,7 +21,7 @@ export default async function DashboardPage() {
   ] = await Promise.all([
     getTotalVolume("1W", userId, profile.unitSystem),
     getTotalCardioMinutes("1W", userId),
-    getWorkoutsPerWeek("1W", userId),
+    getExercisesPerPeriod("1W", userId),
     getStrengthExercisesCount(userId),
     getCardioExercisesCount(userId),
     getUserWorkoutsCount(userId),

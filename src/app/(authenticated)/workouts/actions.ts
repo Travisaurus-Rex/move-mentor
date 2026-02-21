@@ -54,76 +54,80 @@ export async function addExerciseToWorkout(formData: FormData): Promise<void> {
   redirect(`/workouts/${workoutId}`);
 }
 
-export async function addSetToExercise(formData: FormData) {
+export async function addStrengthSet(formData: FormData) {
   const user = await getUser();
-
   const workoutId = formData.get("workoutId") as string | null;
   const workoutExerciseId = formData.get("workoutExerciseId") as string | null;
-
   if (!workoutId || !workoutExerciseId) return;
 
-  const [workoutExercise, unitSystem] = await Promise.all([
-    prisma.workoutExercise.findFirst({
-      where: {
-        id: workoutExerciseId,
-        workout: { userId: user.id },
-      },
-      include: {
-        exercise: {
-          select: { category: true },
-        },
-      },
-    }),
-    getUserUnitSystem(user.id),
-  ]);
-
+  const { workoutExercise, unitSystem } = await resolveWorkoutExercise(
+    workoutExerciseId,
+    user.id,
+  );
   if (!workoutExercise) return;
 
-  const category = workoutExercise.exercise.category;
+  const reps = Number(formData.get("reps"));
+  if (!Number.isFinite(reps) || reps <= 0) return;
 
-  if (category === ExerciseCategory.STRENGTH) {
-    const repsRaw = formData.get("reps");
-    if (!repsRaw) return;
+  const weightRaw = formData.get("weight");
+  const rpeRaw = formData.get("rpe");
+  const notesRaw = formData.get("notes");
 
-    const reps = Number(repsRaw);
-    if (!Number.isFinite(reps) || reps <= 0) return;
-
-    const weightRaw = formData.get("weight");
-    const rpeRaw = formData.get("rpe");
-    const notesRaw = formData.get("notes");
-
-    await prisma.set.create({
-      data: {
-        workoutExerciseId,
-        reps,
-        weight: weightRaw ? toKg(Number(weightRaw), unitSystem) : null,
-        rpe: rpeRaw ? Number(rpeRaw) : null,
-        notes: notesRaw ? String(notesRaw) : null,
-      },
-    });
-  }
-
-  if (category === ExerciseCategory.CARDIO) {
-    const durationRaw = formData.get("duration");
-    if (!durationRaw) return;
-
-    const duration = Number(durationRaw);
-    if (!Number.isFinite(duration) || duration <= 0) return;
-
-    const distanceRaw = formData.get("distance");
-    const notesRaw = formData.get("notes");
-
-    await prisma.set.create({
-      data: {
-        workoutExerciseId,
-        duration,
-        distance: distanceRaw ? toKm(Number(distanceRaw), unitSystem) : null,
-        notes: notesRaw ? String(notesRaw) : null,
-      },
-    });
-  }
+  await prisma.set.create({
+    data: {
+      workoutExerciseId,
+      reps,
+      weight: weightRaw ? toKg(Number(weightRaw), unitSystem) : null,
+      rpe: rpeRaw ? Number(rpeRaw) : null,
+      notes: notesRaw ? String(notesRaw) : null,
+    },
+  });
 
   redirect(`/workouts/${workoutId}`);
+}
+
+export async function addCardioSet(formData: FormData) {
+  const user = await getUser();
+  const workoutId = formData.get("workoutId") as string | null;
+  const workoutExerciseId = formData.get("workoutExerciseId") as string | null;
+  if (!workoutId || !workoutExerciseId) return;
+
+  const { workoutExercise, unitSystem } = await resolveWorkoutExercise(
+    workoutExerciseId,
+    user.id,
+  );
+  if (!workoutExercise) return;
+
+  const duration = Number(formData.get("duration"));
+  if (!Number.isFinite(duration) || duration <= 0) return;
+
+  const distanceRaw = formData.get("distance");
+  const notesRaw = formData.get("notes");
+
+  await prisma.set.create({
+    data: {
+      workoutExerciseId,
+      duration,
+      distance: distanceRaw ? toKm(Number(distanceRaw), unitSystem) : null,
+      notes: notesRaw ? String(notesRaw) : null,
+    },
+  });
+
+  redirect(`/workouts/${workoutId}`);
+}
+
+async function resolveWorkoutExercise(
+  workoutExerciseId: string,
+  userId: string,
+) {
+  const [workoutExercise, unitSystem] = await Promise.all([
+    prisma.workoutExercise.findFirst({
+      where: { id: workoutExerciseId, workout: { userId } },
+      include: { exercise: { select: { category: true } } },
+    }),
+    getUserUnitSystem(userId),
+  ]);
+  return { workoutExercise, unitSystem };
 }
 
 export async function updateSet(formData: FormData) {
