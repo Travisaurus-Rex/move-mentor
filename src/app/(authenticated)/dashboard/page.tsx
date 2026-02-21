@@ -30,7 +30,6 @@ export default async function DashboardPage() {
   return (
     <div className="mx-auto max-w-5xl px-6 py-10">
       <DashboardStats
-        unitSystem={profile.unitSystem}
         initialVolume={volume}
         initialCardioMinutes={cardioMinutes}
         initialChartData={chartData}

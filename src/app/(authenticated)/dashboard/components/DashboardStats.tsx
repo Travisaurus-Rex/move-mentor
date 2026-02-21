@@ -26,7 +26,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import { UnitSystem } from "@prisma/client";
+import { useUserPreferences } from "@/lib/context/UserPreferencesContext";
 
 type DataPoint = { week: string; count: number };
 
@@ -71,7 +71,6 @@ function StatCard({
 }
 
 type Props = {
-  unitSystem: UnitSystem;
   initialVolume: number;
   initialCardioMinutes: number;
   initialChartData: DataPoint[];
@@ -81,7 +80,6 @@ type Props = {
 };
 
 export function DashboardStats({
-  unitSystem,
   initialVolume,
   initialCardioMinutes,
   initialChartData,
@@ -94,6 +92,9 @@ export function DashboardStats({
   const [cardioMinutes, setCardioMinutes] = useState(initialCardioMinutes);
   const [chartData, setChartData] = useState<DataPoint[]>(initialChartData);
   const [loading, setLoading] = useState(false);
+  const { weightUnit } = useUserPreferences();
+  const volumeDisplay =
+    volume >= 10000 ? `${(volume / 1000).toFixed(1)}k` : volume.toFixed(0);
 
   async function handlePeriodChange(val: Period) {
     setPeriod(val);
@@ -139,7 +140,7 @@ export function DashboardStats({
             <CarouselItem className="basis-4/5 md:basis-[45%] lg:basis-[40%] select-none">
               <StatCard
                 label="Total Volume"
-                value={`${(volume / 1000).toFixed(1)} ${unitSystem === UnitSystem.IMPERIAL ? "lbs" : "kg"}`}
+                value={`${volumeDisplay} ${weightUnit}`}
                 subtitle={`${strengthCount} strength exercises`}
                 icon={<Dumbbell className="h-15 w-15" />}
                 color="blue"
