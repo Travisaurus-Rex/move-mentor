@@ -8,7 +8,6 @@ import {
 import { notFound } from "next/navigation";
 import { fromKg, fromKm } from "../utils";
 import { UnitSystem } from "@prisma/client";
-import { getUser } from "../auth/auth";
 
 function getWeekLabel(date: Date): string {
   const d = new Date(date);
@@ -184,11 +183,10 @@ export async function getExercisesPerPeriod(
   const periodData: Map<string, { date: Date; exercises: Set<string> }> =
     new Map();
 
-  // Fill in all days/weeks in range
   const now = new Date();
-  now.setHours(23, 59, 59, 999); // End of today
+  now.setHours(23, 59, 59, 999);
   let current = new Date(since);
-  current.setHours(0, 0, 0, 0); // Start of first day
+  current.setHours(0, 0, 0, 0);
 
   while (current <= now) {
     const label = useDaily
@@ -199,11 +197,9 @@ export async function getExercisesPerPeriod(
       periodData.set(label, { date: new Date(current), exercises: new Set() });
     }
 
-    // Increment by day or week
     current.setDate(current.getDate() + (useDaily ? 1 : 7));
   }
 
-  // Add actual workout data
   for (const workout of workouts) {
     const label = useDaily
       ? workout.date.toLocaleDateString("en-US", {
