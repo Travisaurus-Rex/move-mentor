@@ -1,0 +1,92 @@
+/* StepShell.css */
+
+.step-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 0;
+}
+
+.step-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  animation: stepFadeUp 350ms ease both;
+  animation-delay: 30ms;
+}
+
+.step-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.375rem;
+  animation: stepFadeUp 350ms ease both;
+  animation-delay: 30ms;
+}
+
+.step-subheading {
+  font-size: 0.9375rem;
+  color: var(--muted-foreground);
+  line-height: 1.5;
+}
+
+.step-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 0;
+  animation: stepFadeUp 350ms ease both;
+  animation-delay: 80ms;
+}
+
+.step-nav {
+  display: flex;
+  gap: 0.75rem;
+  animation: stepFadeUp 350ms ease both;
+  animation-delay: 130ms;
+}
+
+.step-next-btn {
+  flex: 1;
+}
+
+.step-next-btn.full-width {
+  width: 100%;
+}
+
+.submitting {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 600ms linear infinite;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+@keyframes stepFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

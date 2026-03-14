@@ -1,0 +1,14 @@
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.field-hint {
+  font-size: 0.8125rem;
+  color: hsl(var(--muted-foreground));
+  margin-top: 0.25rem;
+}
+.field-error {
+  font-size: 0.8125rem;
+  color: hsl(var(--destructive));
+}

@@ -1,0 +1,63 @@
+.unit-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+.unit-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.125rem;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+  width: 100%;
+}
+.unit-card:hover {
+  border-color: var(--primary) / 0.5;
+  background: var(--primary) / 0.04;
+}
+.unit-card.selected {
+  border-color: var(--primary);
+  background: var(--primary) / 0.06;
+  box-shadow: 0 0 0 3px var(--primary) / 0.12;
+}
+.unit-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.unit-label {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: hsl(var(--foreground));
+}
+.unit-description {
+  font-size: 0.8125rem;
+  color: hsl(var(--muted-foreground));
+}
+.unit-check {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid hsl(var(--border));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition:
+    border-color 180ms,
+    background 180ms;
+  color: white;
+}
+.unit-card.selected .unit-check {
+  background: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+}

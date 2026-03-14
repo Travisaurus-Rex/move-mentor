@@ -1,0 +1,148 @@
+/* OnboardingFlow.css */
+
+/* ── Page: centers the card, sets the background ── */
+.onboarding-page {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: var(--background);
+}
+
+/* ── Card ── */
+.onboarding-card {
+  width: 100%;
+  max-width: 560px;
+  min-height: calc(100dvh - 4rem);
+  max-height: calc(100dvh - 4rem);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  box-shadow:
+    0 4px 6px -1px oklch(0 0 0 / 8%),
+    0 10px 32px -4px oklch(0 0 0 / 12%),
+    0 0 0 1px oklch(0 0 0 / 4%);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Segmented progress bar ── */
+.onboarding-progress {
+  display: flex;
+  gap: 6px;
+  padding: 1.25rem 1.5rem 0;
+  flex-shrink: 0;
+}
+
+.onboarding-progress-segment {
+  flex: 1;
+  height: 6px;
+  border-radius: 99px;
+  background: var(--muted);
+  overflow: hidden;
+  position: relative;
+}
+
+.onboarding-progress-segment.completed {
+  background: var(--primary);
+}
+
+.onboarding-progress-segment.active {
+  background: var(--muted);
+}
+
+/* Animated fill for the current segment */
+.onboarding-progress-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--primary);
+  border-radius: 99px;
+  animation: segmentFill 400ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes segmentFill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+/* ── Body: takes remaining space, centers content ── */
+.onboarding-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem 2.5rem;
+  overflow: hidden;
+}
+
+/* ── Step transition animation ── */
+.onboarding-step-wrapper {
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
+}
+
+.onboarding-step-wrapper.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.onboarding-step-wrapper.animating-forward {
+  opacity: 0;
+  transform: translateX(-24px);
+}
+
+.onboarding-step-wrapper.animating-backward {
+  opacity: 0;
+  transform: translateX(24px);
+}
+
+/* ── Error toast ── */
+.onboarding-error {
+  margin: 0 1.5rem 1.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--destructive);
+  color: var(--primary-foreground);
+  border-radius: var(--radius-lg);
+  font-size: 0.875rem;
+  text-align: center;
+  animation: slideUp 200ms ease;
+  flex-shrink: 0;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .onboarding-page {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .onboarding-card {
+    max-width: 100%;
+    min-height: 92dvh;
+    max-height: 92dvh;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .onboarding-body {
+    padding: 1.5rem 1.25rem;
+  }
+}

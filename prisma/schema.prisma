@@ -17,6 +17,13 @@ datasource db {
 // Enums
 // --------------------
 
+enum Goal {
+  LOSE_WEIGHT
+  BUILD_MUSCLE
+  IMPROVE_ENDURANCE
+  INCREASE_STRENGTH
+}
+
 enum ExerciseCategory {
   STRENGTH
   CARDIO
@@ -54,6 +61,12 @@ model UserProfile {
   userId     String     @unique
   displayName String?
   unitSystem UnitSystem @default(METRIC)
+
+  age                 Int?
+  weightKg            Float?
+  goals               Goal[]
+  weeklyWorkoutTarget Int?
+  onboardingComplete  Boolean @default(false)
 
   user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 

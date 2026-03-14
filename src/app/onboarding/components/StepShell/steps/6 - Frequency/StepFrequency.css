@@ -1,0 +1,75 @@
+.frequency-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ── Day pills ────────────────────────────────────── */
+.day-pills {
+  display: flex;
+  gap: 0.5rem;
+}
+.day-pill {
+  flex: 1;
+  height: 44px;
+  border-radius: 8px;
+  border: 1.5px solid hsl(var(--border));
+  background: transparent;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    border-color 150ms,
+    background 150ms,
+    color 150ms;
+  color: hsl(var(--foreground));
+}
+.day-pill:hover {
+  border-color: hsl(var(--primary) / 0.5);
+  background: hsl(var(--primary) / 0.04);
+}
+.day-pill.selected {
+  border-color: hsl(var(--primary));
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+/* ── Visual bar ───────────────────────────────────── */
+.frequency-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+.bar-segment {
+  flex: 1;
+  border-radius: 4px;
+  background: hsl(var(--muted));
+  transition:
+    background 200ms ease,
+    height 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.bar-segment.filled {
+  background: hsl(var(--primary) / 0.3);
+}
+.bar-segment.peak {
+  background: hsl(var(--primary));
+}
+
+/* ── Description ──────────────────────────────────── */
+.frequency-description {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-height: 48px;
+}
+.frequency-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: hsl(var(--foreground));
+}
+.frequency-note {
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.5;
+}
