@@ -13,6 +13,7 @@ export async function proxy(req: NextRequest) {
 
   if (pathname !== "/onboarding") {
     const onboardingComplete = req.cookies.get("mm_onboarding_complete");
+
     if (!onboardingComplete) {
       return NextResponse.redirect(new URL("/onboarding", req.url));
     }
@@ -22,5 +23,5 @@ export async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/workouts/:path*", "/onboarding"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|$).*)"],
 };
