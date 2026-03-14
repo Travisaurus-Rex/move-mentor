@@ -12,6 +12,7 @@ import { StepWeight } from "../StepShell/steps/4 - Weight/StepWeight";
 import { StepGoals } from "../StepShell/steps/5 - Goals/StepGoals";
 import { StepFrequency } from "../StepShell/steps/6 - Frequency/StepFrequency";
 import { StepSummary } from "../StepShell/steps/7 - Summary/StepSummary";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -81,6 +82,7 @@ export function OnboardingFlow() {
         try {
           await completeOnboarding(merged as OnboardingData);
         } catch (err) {
+          if (isRedirectError(err)) throw err;
           setError(err instanceof Error ? err.message : "Something went wrong");
           setIsSubmitting(false);
         }
