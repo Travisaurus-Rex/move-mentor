@@ -55,8 +55,6 @@ async function main() {
       create: exercise,
     });
   }
-
-  console.log(`Seeded ${exercises.length} exercises`);
 }
 
 main()

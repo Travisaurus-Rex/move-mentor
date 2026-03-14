@@ -32,11 +32,6 @@ export function StepUnitSystem({
     data.unitSystem ?? UnitSystem.METRIC,
   );
 
-  function change(val: UnitSystem): void {
-    setUnitSystem(val);
-    console.log(unitSystem);
-  }
-
   return (
     <StepShell
       heading="Which units do you prefer?"
@@ -60,7 +55,7 @@ export function StepUnitSystem({
               ]
                 .join(" ")
                 .trim()}
-              onClick={() => change(option.value)}
+              onClick={() => setUnitSystem(option.value)}
               aria-pressed={isSelected}
             >
               <div className="unit-card-text">

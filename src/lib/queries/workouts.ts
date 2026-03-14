@@ -164,7 +164,6 @@ export async function getExercisesPerPeriod(
     period === "ALL"
       ? new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)
       : periodToDate(period)!;
-  console.log("since", since);
 
   const workouts = await prisma.workout.findMany({
     where: { userId, date: { gte: since } },
