@@ -4,6 +4,7 @@ import { getUser } from "@/lib/auth/auth";
 import { prisma } from "@/lib/prisma";
 import { UnitSystem } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
 export async function updateUserProfile(
   previousState: unknown,
@@ -73,4 +74,7 @@ export async function deleteAccount() {
   await prisma.user.delete({
     where: { id: user.id },
   });
+
+  const cookieStore = await cookies();
+  cookieStore.delete("mm_onboarding_complete");
 }
