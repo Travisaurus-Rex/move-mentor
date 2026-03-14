@@ -16,13 +16,13 @@
 }
 .weight-unit {
   font-size: 1rem;
-  color: hsl(var(--muted-foreground));
+  color: var(--muted-foreground);
 }
 .weight-hint {
   font-size: 0.8125rem;
-  color: hsl(var(--muted-foreground));
+  color: var(--muted-foreground);
 }
 .field-error {
   font-size: 0.8125rem;
-  color: hsl(var(--destructive));
+  color: var(--destructive);
 }

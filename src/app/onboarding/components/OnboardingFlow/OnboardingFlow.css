@@ -62,6 +62,24 @@
   animation: segmentFill 400ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
+.onboarding-progress-segment.no-animate {
+  background: var(--primary);
+}
+
+.onboarding-progress-segment.departing {
+  background: var(--primary);
+  animation: segmentShrink 400ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes segmentShrink {
+  from {
+    clip-path: inset(0 0% 0 0);
+  }
+  to {
+    clip-path: inset(0 100% 0 0);
+  }
+}
+
 @keyframes segmentFill {
   from {
     width: 0%;
@@ -138,8 +156,8 @@
     max-width: 100%;
     min-height: 92dvh;
     max-height: 92dvh;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
+    border: none;
+    box-shadow: none;
   }
 
   .onboarding-body {

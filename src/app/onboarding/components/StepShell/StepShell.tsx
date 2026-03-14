@@ -11,7 +11,7 @@ import { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 
 interface StepShellProps {
-  heading: string;
+  heading: ReactNode;
   subheading?: string;
   children: ReactNode;
   onNext: () => void;

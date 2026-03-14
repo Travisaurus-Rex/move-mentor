@@ -48,6 +48,7 @@ const STEP_LABELS = [
 ];
 
 export function OnboardingFlow() {
+  const [previousStep, setPreviousStep] = useState<number | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
   const [direction, setDirection] = useState<StepDirection>("forward");
   const [animating, setAnimating] = useState(false);
@@ -63,9 +64,11 @@ export function OnboardingFlow() {
       if (update) setData((prev) => ({ ...prev, ...update }));
       setDirection(dir);
       setAnimating(true);
+      setPreviousStep(currentStep);
       setTimeout(() => {
         setCurrentStep(next);
         setAnimating(false);
+        setPreviousStep(null);
       }, 220);
     },
     [animating],
@@ -113,12 +116,17 @@ export function OnboardingFlow() {
                 "onboarding-progress-segment",
                 i < currentStep ? "completed" : "",
                 i === currentStep ? "active" : "",
+                i === previousStep && direction === "backward"
+                  ? "departing"
+                  : "",
+                i === currentStep && direction === "backward" && !animating
+                  ? "no-animate"
+                  : "",
               ]
                 .filter(Boolean)
                 .join(" ")}
-              aria-label={label}
             >
-              {i === currentStep && (
+              {i === currentStep && (direction === "forward" || !animating) && (
                 <div className="onboarding-progress-fill" />
               )}
             </div>

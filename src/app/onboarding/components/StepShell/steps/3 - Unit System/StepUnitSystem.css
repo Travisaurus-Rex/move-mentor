@@ -37,17 +37,17 @@
 .unit-label {
   font-size: 0.9375rem;
   font-weight: 500;
-  color: hsl(var(--foreground));
+  color: var(--foreground);
 }
 .unit-description {
   font-size: 0.8125rem;
-  color: hsl(var(--muted-foreground));
+  color: var(--muted-foreground);
 }
 .unit-check {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  border: 1.5px solid hsl(var(--border));
+  border: 1.5px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -58,6 +58,6 @@
   color: white;
 }
 .unit-card.selected .unit-check {
-  background: hsl(var(--primary));
-  border-color: hsl(var(--primary));
+  background: var(--primary);
+  border-color: var(--primary);
 }

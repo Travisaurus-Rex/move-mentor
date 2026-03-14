@@ -29,7 +29,11 @@ export function StepWelcome({
 
   return (
     <StepShell
-      heading="Welcome to Move Mentor"
+      heading={
+        <span className="font-black text-2xl">
+          Welcome to <span className="text-primary">Move</span>Mentor
+        </span>
+      }
       subheading="Let's get your profile set up. This takes about a minute."
       onNext={handleNext}
       onBack={onBack}
