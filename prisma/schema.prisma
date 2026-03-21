@@ -31,6 +31,32 @@ enum ExerciseCategory {
   MOBILITY
 }
 
+enum MovementPattern {
+  HORIZONTAL_PUSH
+  VERTICAL_PUSH
+  HORIZONTAL_PULL
+  VERTICAL_PULL
+  QUAD_DOMINANT
+  HIP_DOMINANT
+  ISOLATION
+  CORE
+  CARDIO
+}
+
+enum MuscleGroup {
+  CHEST
+  BACK
+  SHOULDERS
+  BICEPS
+  TRICEPS
+  FOREARMS
+  QUADS
+  HAMSTRINGS
+  GLUTES
+  CALVES
+  CORE
+}
+
 enum UnitSystem {
   METRIC
   IMPERIAL
@@ -111,9 +137,12 @@ model VerificationToken {
 }
 
 model Exercise {
-  id       String           @id @default(cuid())
-  name     String           @unique
-  category ExerciseCategory
+  id               String           @id @default(cuid())
+  name             String           @unique
+  category         ExerciseCategory
+  muscleGroups     MuscleGroup[]
+  movementPattern  MovementPattern?
+  isCompound       Boolean          @default(false)
 
   workoutExercises WorkoutExercise[]
 
